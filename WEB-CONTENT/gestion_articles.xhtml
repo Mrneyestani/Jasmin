@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<h:outputStylesheet library="css" name="common-style.css" />
+<h:outputStylesheet library="css" name="table-style.css" />
+<title>Jasmin_Gestion_Articles</title>
+</head>
+
+<body>
+	<ui:composition template="/resources/template/layout.xhtml">
+
+		<!-- Redefinition de la zone 'header' du layout  -->
+		<ui:define name="header">
+			<f:view>
+				<h:form>
+					<div class="header-bar">
+						<div class="logo">
+							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
+						</div>
+						<div class="header-title">
+							<h1>Jasmin</h1>
+						</div>
+
+						<input id="menu-toggle" type="checkbox" /> <label
+							class="menu-button-container" for="menu-toggle">
+							<div class="menu-button"></div>
+						</label>
+
+						<ul class="menu">
+							<li class="user"><p>Hi
+									#{loginbean.connectedUser.firstName}</p></li>
+							<li><h:commandLink action="/home">
+									<h:outputText value="Home"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+									<h:outputText value="Sign out"></h:outputText>
+								</h:commandLink></li>
+						</ul>
+					</div>
+				</h:form>
+			</f:view>
+		</ui:define>
+		<!-- Redefinition de la zone 'content' du layout  -->
+		<ui:define name="content">
+			<f:view>
+			
+			<h:form>
+					<h:selectOneMenu value="#{categoriebean.categorieId}"
+						onchange="submit()"
+						valueChangeListener="#{categoriebean.categorieChange}">
+						<f:selectItems value="#{categoriebean.categorieList}" var="oneCat"
+							itemValue="#{oneCat.id}" itemLabel="#{oneCat.nomCategorie}" />
+					</h:selectOneMenu>
+				</h:form>
+
+				<p>#{categoriebean.promptStatus}</p>
+			
+				<h:form>
+					<h3>Gestion des articles</h3>
+					<h:panelGrid id="panel" columns="3" cellpadding="2" cellspacing="1">
+
+						<h:outputLabel value="Nom Catégorie :" />
+						<h:inputText id="nomCategorie" required="true"
+							value="#{categoriebean.nomCategorie}"
+							requiredMessage="Le nom de categorie est obligatoire !">
+							<f:validateLength minimum="3" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="nomCategorie" style="color:red"></h:message>
+
+						<h:outputLabel value=" Remise Categorie :" />
+						<h:inputText id="remiseCategorie" required="false"
+							value="#{categoriebean.remiseCategorie}"
+							requiredMessage="La remise categorie est obligatoire !">
+							<f:validateLength minimum="1" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="remiseCategorie" style="color:red"></h:message>
+
+
+						<h:outputLabel value=" Is Remise Cumulable :" />
+						<h:selectOneRadio id="isRemiseCumulable" required="true"
+							value="#{categoriebean.isRemiseCumulable}"
+							requiredMessage="Le choix de disponible est obligatoire !">
+							<f:selectItem itemLabel="Oui" itemValue="true" />
+							<f:selectItem itemLabel="Non" itemValue="false" />
+						</h:selectOneRadio>
+						<h:message for="isRemiseCumulable" style="color:red"></h:message>
+
+						<h:outputLabel value=" Photo Categorie :" />
+						<h:inputText id="photoCategorie" required="false"
+							value="#{categoriebean.photoCategorie}"
+							requiredMessage="La photo categorie est obligatoire !">
+
+						</h:inputText>
+						<h:message for="photoCategorie" style="color:red"></h:message>
+
+					</h:panelGrid>
+
+					<br></br>
+					<h:panelGrid columns="3" cellpadding="0" cellspacing="8">
+						<h:commandButton id="ajouterCategory" value="AjouterCategory"
+							action="#{categoriebean.addCategorie()}" />
+						<h:commandButton id="updateCategory" value="UpdateCategory"
+							action="#{categoriebean.editCategorie()}" />
+						<h:commandButton id="resetCategory" value="Initialiser"
+							action="#{categoriebean.initialiseCategorie()}" />
+					</h:panelGrid>
+					<br></br>
+					<h:panelGroup id="panelMessagess">
+						<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+							<h:outputText value="#{categoriebean.messageSuccess}"
+								style="color:green"></h:outputText>
+							<h:outputText value="#{categoriebean.messageError}"
+								style="color:red"></h:outputText>
+						</h:panelGrid>
+					</h:panelGroup>
+
+				</h:form>
+
+
+				<h:form>
+
+					<h4>Article (s) :</h4>
+
+					<h:panelGroup>
+
+						<h:panelGrid columns="3" cellpadding="0" cellspacing="8">
+
+							<h:outputLabel value="Nom : "></h:outputLabel>
+							<h:inputText id="name" value="#{articlebean.nom}" required="true"
+								requiredMessage="La Description d'article est obligatoire !">
+							</h:inputText>
+							<h:message for="name" style="color:red"></h:message>
+
+							<h:outputLabel value="Description : "></h:outputLabel>
+							<h:inputText id="description" value="#{articlebean.description}"
+								required="true"
+								requiredMessage="La Description d'article est obligatoire !">
+							</h:inputText>
+							<h:message for="description" style="color:red"></h:message>
+
+							<h:outputLabel value="Prix : "></h:outputLabel>
+							<h:inputText id="prix" value="#{articlebean.prix}"
+								required="true" requiredMessage="Le prix est obligatoire !">
+							</h:inputText>
+							<h:message for="prix" style="color:red"></h:message>
+
+							<h:outputLabel value="Remise Article : "></h:outputLabel>
+							<h:inputText id="remise" value="#{articlebean.remise}"
+								required="true"
+								requiredMessage="La Remise d'article est obligatoire !">
+							</h:inputText>
+							<h:message for="remise" style="color:red"></h:message>
+
+							<h:outputLabel value="Stock : "></h:outputLabel>
+							<h:inputText id="stock" value="#{articlebean.stock}"
+								required="true" requiredMessage="Le stock est obligatoire !">
+							</h:inputText>
+							<h:message for="stock" style="color:red"></h:message>
+
+							<h:outputLabel value=" Is Vendable :" />
+							<h:selectOneRadio id="isVendable" required="true"
+								value="#{articlebean.isVendable}"
+								requiredMessage="Is Vendable est obligatoire !">
+								<f:selectItem itemLabel="Oui" itemValue="true" />
+								<f:selectItem itemLabel="Non" itemValue="false" />
+							</h:selectOneRadio>
+							<h:message for="isVendable" style="color:red"></h:message>
+
+							<h:outputLabel value="Photos Article : "></h:outputLabel>
+							<h:inputText id="photos" value="#{articlebean.photos}"
+								required="false"
+								requiredMessage="La photo article est obligatoire !">
+							</h:inputText>
+							<h:message for="photos" style="color:red"></h:message>
+
+							<h:outputLabel value="videos Article : "></h:outputLabel>
+							<h:inputText id="videos" value="#{articlebean.videos}"
+								required="false"
+								requiredMessage="La videosArticle obligatoire !">
+							</h:inputText>
+							<h:message for="videos" style="color:red"></h:message>
+
+						</h:panelGrid>
+
+						<h:panelGrid columns="3" cellpadding="0" cellspacing="8">
+							<h:commandButton id="addArticle" value="Ajouter article"
+								action="#{articlebean.addArticle()}" />
+							<h:commandButton id="updateArticle" value="Update article"
+								action="#{articlebean.editeArticle()}" />
+							<h:commandButton id="resetCategory" value="Initialiser"
+								action="#{articlebean.initialiseArticle()}" />
+
+						</h:panelGrid>
+
+						<h:panelGroup id="panelMessagess">
+							<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+								<h:outputText value="#{articlebean.messageSuccess}"
+									style="color:green"></h:outputText>
+								<h:outputText value="#{articlebean.messageError}"
+									style="color:red"></h:outputText>
+							</h:panelGrid>
+						</h:panelGroup>
+
+					</h:panelGroup>
+
+				</h:form>
+
+				<h:form>
+					<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+						<ui:repeat value="#{articlebean.itemList}" var="a">
+							<h:outputText style="color:blue"
+								value="#{a.name} #{a.description} #{a.prix} #{a.remise} #{a.stock} #{a.isVendable} #{a.photos} #{a.videos}" />
+							<br></br>
+						</ui:repeat>
+					</h:panelGrid>
+
+					<h:panelGroup id="panelMessagess">
+						<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+							<h:outputText value="#{articlebean.messageSuccess}"
+								style="color:green"></h:outputText>
+							<h:outputText value="#{articlebean.messageError}"
+								style="color:red"></h:outputText>
+						</h:panelGrid>
+					</h:panelGroup>
+
+				</h:form>
+
+				<h:form>
+					<h4>Liste des categories et articles :</h4>
+
+					<h:dataTable id="datatable" value="#{categoriebean.categoryList}"
+						var="categorie" styleClass="order-table"
+						headerClass="order-table-header"
+						rowClasses="order-table-odd-row,order-table-even-row">
+						<h:column>
+							<br />
+							<f:facet name="header">Categorys  </f:facet>
+							<h:outputText value="#{categorie.nomCategorie}" />
+							<h:commandButton value="ModifierCategorie"
+								action="#{categoriebean.updateCategorie(categorie)}" />
+							<h:commandButton value="SupprimerCategorie"
+								action="#{categoriebean.deleteCategorie(categorie)}" />
+						</h:column>
+
+						<h:column>
+							<p>---------------------------------</p>
+							<f:facet name="header">Articles</f:facet>
+							<ui:repeat value="#{categorie.items}" var="a">
+								<h:column>
+									<h:column />
+									<h:outputText style="color:blue"
+										value="#{a.id}       #{a.name}" />
+								</h:column>
+								<h:column>
+									<h:commandButton value="SupprimerArticle"
+										action="#{articlebean.deleteArticleById(a.id)}" />
+									<h:commandButton value="ModifierArticle"
+										action="#{articlebean.updateArticle(a.id)}" />
+								</h:column>
+								<br />
+
+							</ui:repeat>
+						</h:column>
+					</h:dataTable>
+
+				</h:form>
+
+			</f:view>
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>
+
+

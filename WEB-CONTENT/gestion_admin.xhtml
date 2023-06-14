@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<h:outputStylesheet library="css" name="common-style.css" />
+<title>Gestion Magsinier, Admin et Web Service</title>
+</head>
+
+<body>
+	<ui:composition template="/resources/template/layout.xhtml">
+
+		<!-- Redefinition de la zone 'header' du layout  -->
+		<ui:define name="header">
+			<f:view>
+				<h:form>
+					<div class="header-bar">
+						<div class="logo">
+							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
+						</div>
+						<div class="header-title">
+							<h1>Jasmin</h1>
+						</div>
+
+						<input id="menu-toggle" type="checkbox" /> <label
+							class="menu-button-container" for="menu-toggle">
+							<div class="menu-button"></div>
+						</label>
+
+						<ul class="menu">
+							<li class="user"><p>Hi
+									#{loginbean.connectedUser.firstName}</p></li>
+							<li><h:commandLink action="/home">
+									<h:outputText value="Home"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+									<h:outputText value="Sign out"></h:outputText>
+								</h:commandLink></li>
+						</ul>
+					</div>
+				</h:form>
+			</f:view>
+		</ui:define>
+		<!-- Redefinition de la zone 'content' du layout  -->
+		<ui:define name="content">
+			<f:view>
+				<h:form>
+					<h3>Ajouter Magasinier/Admin/WebService</h3>
+					<h:panelGrid id="panel" columns="3" cellpadding="2" cellspacing="1">
+
+						<h:outputLabel value="Nom :" />
+						<h:inputText id="name" required="true"
+							value="#{userbean.lastName}"
+							requiredMessage="Le nom est obligatoire !">
+							<f:validateLength minimum="3" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="name" style="color:red"></h:message>
+
+						<h:outputLabel value="Prénom :" />
+						<h:inputText id="firstName" required="true"
+							value="#{userbean.firstName}"
+							requiredMessage="L'Email est obligatoire !">
+							<f:validateLength minimum="3" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="firstName" style="color:red"></h:message>
+
+						<h:outputLabel value="Email :" />
+						<h:inputText id="email" required="true" value="#{userbean.email}"
+							requiredMessage="L'Email est obligatoire !">
+							<f:validateLength minimum="1" maximum="50"></f:validateLength>
+						</h:inputText>
+						<h:message for="email" style="color:red"></h:message>
+
+						<h:outputLabel value="Mot de passe : "></h:outputLabel>
+						<h:inputSecret id="motDePasse" value="#{userbean.password}"
+							required="true"
+							requiredMessage="Le mot de passe est obligatoire !">
+							<f:validateLength minimum="1" maximum="30" />
+						</h:inputSecret>
+						<h:message for="motDePasse" style="color:red"></h:message>
+
+						<h:outputLabel value="Confirmation Mot de passe : "></h:outputLabel>
+						<h:inputSecret id="motDePasseConfirmation"
+							value="#{userbean.passwordConfirmation}" required="true"
+							requiredMessage="Le mot de passe de confirmation est obligatoire !">
+							<f:validateLength minimum="1" maximum="30" />
+						</h:inputSecret>
+						<h:message for="motDePasseConfirmation" style="color:red"></h:message>
+
+						<h:outputLabel value="Date de naissance :  (jj/mm/aaaa)" />
+						<h:inputText id="birthDate" required="true"
+							value="#{userbean.birthDate}"
+							requiredMessage="La date de naissance  est obligatoire !">
+							<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+					(jj/mm/aaaa)
+								<f:validateLength minimum="6" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="birthDate" style="color:red"></h:message>
+
+						<h:outputLabel value="Actif :" />
+						<h:selectOneRadio id="isActif" required="true"
+							value="#{userbean.isActif}"
+							requiredMessage="Le choix de actif est obligatoire !">
+							<f:selectItem itemLabel="Oui" itemValue="true" />
+							<f:selectItem itemLabel="Non" itemValue="false" />
+						</h:selectOneRadio>
+						<h:message for="isActif" style="color:red"></h:message>
+
+						<h:outputLabel value="Profile : "></h:outputLabel>
+						<h:selectOneListbox id="profile" value="#{userbean.profile}"
+							required="true" requiredMessage="Le profile est obligatoire !">
+							<f:selectItem itemLabel="Magasinier" itemValue="Magasinier" />
+							<f:selectItem itemLabel="Admin" itemValue="Admin" />
+							<f:selectItem itemLabel="Web service" itemValue="Webservice" />
+						</h:selectOneListbox>
+						<h:message for="profile" style="color:red"></h:message>
+
+						<h:outputLabel value="phone :" />
+						<h:inputText id="phone" required="true" value="#{userbean.phone}"
+							requiredMessage="Le numéro est obligatoire !">
+							<f:validateLength minimum="6" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="phone" style="color:red"></h:message>
+
+					</h:panelGrid>
+
+					<p></p>
+					<h:commandButton id="valider" value="Valider"
+						action="#{userbean.addUser()}" />
+					<br></br>
+					<h:panelGroup id="panelMessagess">
+						<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+							<h:outputText value="#{userbean.messageSuccess}"
+								style="color:green"></h:outputText>
+							<h:outputText value="#{userbean.messageError}" style="color:red"></h:outputText>
+						</h:panelGrid>
+					</h:panelGroup>
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>
+
+
