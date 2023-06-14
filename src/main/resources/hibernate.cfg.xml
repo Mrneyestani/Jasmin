@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">root</property>
+		<property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/jasmin_db</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+		<property name="current_session_context_class">thread</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		<property name="hibernate.connection.autocommit">true</property>
+		<property name="hibernate.enable_lazy_load_no_trans">true</property>
+		<property name="hibernate.charSet">UTF-8</property>
+
+		<mapping class="fr.jasmin.entity.User"></mapping>
+		<mapping class="fr.jasmin.entity.Address"></mapping>
+		<mapping class="fr.jasmin.entity.ItemCart"></mapping>
+		<mapping class="fr.jasmin.entity.Param"></mapping>
+		<mapping class="fr.jasmin.entity.BankCard"></mapping>
+		<mapping class="fr.jasmin.entity.Category"></mapping>
+		<mapping class="fr.jasmin.entity.Item"></mapping>
+		<mapping class="fr.jasmin.entity.ItemCart"></mapping>
+		<mapping class="fr.jasmin.entity.Order"></mapping>
+		<mapping class="fr.jasmin.entity.Comment"></mapping>
+		<mapping class="fr.jasmin.entity.OrderLine"></mapping>
+
+
+	</session-factory>
+</hibernate-configuration>
