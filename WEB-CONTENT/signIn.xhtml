@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<h:outputStylesheet library="css" name="common-style.css" />
+<title>Jasmin_SignIn</title>
+</head>
+
+<body>
+	<ui:composition template="/resources/template/layout.xhtml">
+
+		<!-- Redefinition de la zone 'header' du layout  -->
+		<ui:define name="header">
+			<f:view>
+				<h:form>
+					<div class="header-bar">
+						<div class="logo">
+							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
+						</div>
+						<div class="header-title">
+							<h1>Jasmin</h1>
+						</div>
+
+						<input id="menu-toggle" type="checkbox" /> <label
+							class="menu-button-container" for="menu-toggle">
+							<div class="menu-button"></div>
+						</label>
+
+						<ul class="menu">
+							<li><h:commandLink action="/home">
+									<h:outputText value="Home"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink action="#{loginbean.enregistrer()}">
+									<h:outputText value="Sign up"></h:outputText>
+								</h:commandLink></li>
+						</ul>
+					</div>
+				</h:form>
+			</f:view>
+		</ui:define>
+		<ui:define name="content">
+			<f:view>
+				<h:form>
+					<div class="main-container">
+						<h1>Connection</h1>
+						<div class="row-div">
+							<h:inputText value="#{loginbean.email}" required="true"
+								a:placeholder="Email" requiredMessage="email is required"
+								id="email" class="input-text">
+								<f:validateLength minimum="1" maximum="50"></f:validateLength>
+							</h:inputText>
+							<h:message for="email" style="color:red" />
+						</div>
+						<div class="row-div">
+							<h:inputSecret value="#{loginbean.password}" required="true"
+								a:placeholder="Password" requiredMessage="password is required"
+								id="password" class="input-text">
+								<f:validateLength minimum="1" maximum="30"></f:validateLength>
+							</h:inputSecret>
+							<h:message for="password" style="color:red" />
+						</div>
+						<div class="row-div">
+							<h:commandButton id="submitConnection" value="Submit"
+								class="submit-button" action="#{loginbean.seLoguer()}" />
+						</div>
+
+						<h:panelGroup id="panelMessagess">
+							<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+								<h:outputText value="#{loginbean.messageSuccess}"
+									style="color:green"></h:outputText>
+								<h:outputText value="#{loginbean.messageError}"
+									style="color:red"></h:outputText>
+							</h:panelGrid>
+						</h:panelGroup>
+
+						<div class="message">
+							<h:link value="Vous n'avez pas de compte ? Enregistrer"
+								outcome="#{loginbean.enregistrer()}" />
+						</div>
+
+					</div>
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>
+
+
