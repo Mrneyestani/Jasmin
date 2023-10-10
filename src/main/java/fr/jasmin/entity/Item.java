@@ -37,11 +37,6 @@ public class Item {
 
 	private Boolean isVendable;
 
-	@Transient
-	private Boolean isChecked;
-	@Transient
-	private Integer quantite;
-
 	@Column(name = "stock", nullable = false)
 	private Integer stock;
 
@@ -155,28 +150,12 @@ public class Item {
 		this.category = category;
 	}
 
-	public Boolean getIsChecked() {
-		return isChecked;
-	}
-
-	public void setIsChecked(Boolean isChecked) {
-		this.isChecked = isChecked;
-	}
-
-	public Integer getQuantite() {
-		return quantite;
-	}
-
-	public void setQuantite(Integer quantite) {
-		this.quantite = quantite;
-	}
-
 	@Override
 	public String toString() {
-		return "Item [id=" + id + ", name=" + name + ", description=" + description + ", prix=" + prix
-				+ ", isVendable=" + isVendable + ", isChecked=" + isChecked + ", quantite=" + quantite + ", stock="
-				+ stock + ", remise=" + remise + ", photos=" + photos + ", videos=" + videos + ", category=" + category
-				+ "]";
+		return "Item [id=" + id + ", name=" + name + ", description=" + description + ", prix=" + prix + ", isVendable="
+				+ isVendable + ", stock=" + stock + ", remise=" + remise + ", photos=" + photos + ", videos=" + videos
+				+ ", category=" + category + ", CommentList=" + CommentList + "]";
 	}
+
 
 }

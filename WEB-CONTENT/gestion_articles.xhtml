@@ -30,19 +30,17 @@
 						<div class="header-title">
 							<h1>Jasmin</h1>
 						</div>
-
 						<input id="menu-toggle" type="checkbox" /> <label
 							class="menu-button-container" for="menu-toggle">
 							<div class="menu-button"></div>
 						</label>
-
 						<ul class="menu">
 							<li class="user"><p>Hi
 									#{loginbean.connectedUser.firstName}</p></li>
-							<li><h:commandLink action="/home">
+							<li><h:commandLink action="/gestion_articles">
 									<h:outputText value="Home"></h:outputText>
 								</h:commandLink></li>
-							<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+							<li><h:commandLink action="#{gestionarticlebean.seDeconnecter()}">
 									<h:outputText value="Sign out"></h:outputText>
 								</h:commandLink></li>
 						</ul>
@@ -53,231 +51,181 @@
 		<!-- Redefinition de la zone 'content' du layout  -->
 		<ui:define name="content">
 			<f:view>
-			
-			<h:form>
-					<h:selectOneMenu value="#{categoriebean.categorieId}"
+				<h:form>
+				<h3>Ajouter des articles à la catégorie sélectionnée ci-dessous 
+				ou créer une nouvelle catégorie.</h3>
+					<h:commandButton id="addUser" value="Ajouter/créer"
+						action="#{gestionarticlebean.goToPageAddUpdateInitialised()}">
+					</h:commandButton>
+					<h3>Sélectionnez une catégorie pour afficher ou modifier ses
+						articles :</h3>
+					<h:selectOneMenu value="#{gestionarticlebean.categorieId}"
 						onchange="submit()"
-						valueChangeListener="#{categoriebean.categorieChange}">
-						<f:selectItems value="#{categoriebean.categorieList}" var="oneCat"
-							itemValue="#{oneCat.id}" itemLabel="#{oneCat.nomCategorie}" />
+						valueChangeListener="#{gestionarticlebean.categorieChange}">
+						<f:selectItems value="#{gestionarticlebean.listCategories}"
+							var="oneCat" itemValue="#{oneCat.id}"
+							itemLabel="#{oneCat.nomCategorie}" />
 					</h:selectOneMenu>
 				</h:form>
-
-				<p>#{categoriebean.promptStatus}</p>
-			
 				<h:form>
-					<h3>Gestion des articles</h3>
-					<h:panelGrid id="panel" columns="3" cellpadding="2" cellspacing="1">
-
-						<h:outputLabel value="Nom Catégorie :" />
-						<h:inputText id="nomCategorie" required="true"
-							value="#{categoriebean.nomCategorie}"
-							requiredMessage="Le nom de categorie est obligatoire !">
-							<f:validateLength minimum="3" maximum="30"></f:validateLength>
-						</h:inputText>
-						<h:message for="nomCategorie" style="color:red"></h:message>
-
-						<h:outputLabel value=" Remise Categorie :" />
-						<h:inputText id="remiseCategorie" required="false"
-							value="#{categoriebean.remiseCategorie}"
-							requiredMessage="La remise categorie est obligatoire !">
-							<f:validateLength minimum="1" maximum="30"></f:validateLength>
-						</h:inputText>
-						<h:message for="remiseCategorie" style="color:red"></h:message>
-
-
-						<h:outputLabel value=" Is Remise Cumulable :" />
-						<h:selectOneRadio id="isRemiseCumulable" required="true"
-							value="#{categoriebean.isRemiseCumulable}"
-							requiredMessage="Le choix de disponible est obligatoire !">
-							<f:selectItem itemLabel="Oui" itemValue="true" />
-							<f:selectItem itemLabel="Non" itemValue="false" />
-						</h:selectOneRadio>
-						<h:message for="isRemiseCumulable" style="color:red"></h:message>
-
-						<h:outputLabel value=" Photo Categorie :" />
-						<h:inputText id="photoCategorie" required="false"
-							value="#{categoriebean.photoCategorie}"
-							requiredMessage="La photo categorie est obligatoire !">
-
-						</h:inputText>
-						<h:message for="photoCategorie" style="color:red"></h:message>
-
-					</h:panelGrid>
-
-					<br></br>
-					<h:panelGrid columns="3" cellpadding="0" cellspacing="8">
-						<h:commandButton id="ajouterCategory" value="AjouterCategory"
-							action="#{categoriebean.addCategorie()}" />
-						<h:commandButton id="updateCategory" value="UpdateCategory"
-							action="#{categoriebean.editCategorie()}" />
-						<h:commandButton id="resetCategory" value="Initialiser"
-							action="#{categoriebean.initialiseCategorie()}" />
-					</h:panelGrid>
-					<br></br>
-					<h:panelGroup id="panelMessagess">
-						<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
-							<h:outputText value="#{categoriebean.messageSuccess}"
-								style="color:green"></h:outputText>
-							<h:outputText value="#{categoriebean.messageError}"
-								style="color:red"></h:outputText>
-						</h:panelGrid>
-					</h:panelGroup>
-
-				</h:form>
-
-
-				<h:form>
-
-					<h4>Article (s) :</h4>
-
-					<h:panelGroup>
-
-						<h:panelGrid columns="3" cellpadding="0" cellspacing="8">
-
-							<h:outputLabel value="Nom : "></h:outputLabel>
-							<h:inputText id="name" value="#{articlebean.nom}" required="true"
-								requiredMessage="La Description d'article est obligatoire !">
-							</h:inputText>
-							<h:message for="name" style="color:red"></h:message>
-
-							<h:outputLabel value="Description : "></h:outputLabel>
-							<h:inputText id="description" value="#{articlebean.description}"
-								required="true"
-								requiredMessage="La Description d'article est obligatoire !">
-							</h:inputText>
-							<h:message for="description" style="color:red"></h:message>
-
-							<h:outputLabel value="Prix : "></h:outputLabel>
-							<h:inputText id="prix" value="#{articlebean.prix}"
-								required="true" requiredMessage="Le prix est obligatoire !">
-							</h:inputText>
-							<h:message for="prix" style="color:red"></h:message>
-
-							<h:outputLabel value="Remise Article : "></h:outputLabel>
-							<h:inputText id="remise" value="#{articlebean.remise}"
-								required="true"
-								requiredMessage="La Remise d'article est obligatoire !">
-							</h:inputText>
-							<h:message for="remise" style="color:red"></h:message>
-
-							<h:outputLabel value="Stock : "></h:outputLabel>
-							<h:inputText id="stock" value="#{articlebean.stock}"
-								required="true" requiredMessage="Le stock est obligatoire !">
-							</h:inputText>
-							<h:message for="stock" style="color:red"></h:message>
-
-							<h:outputLabel value=" Is Vendable :" />
-							<h:selectOneRadio id="isVendable" required="true"
-								value="#{articlebean.isVendable}"
-								requiredMessage="Is Vendable est obligatoire !">
-								<f:selectItem itemLabel="Oui" itemValue="true" />
-								<f:selectItem itemLabel="Non" itemValue="false" />
-							</h:selectOneRadio>
-							<h:message for="isVendable" style="color:red"></h:message>
-
-							<h:outputLabel value="Photos Article : "></h:outputLabel>
-							<h:inputText id="photos" value="#{articlebean.photos}"
-								required="false"
-								requiredMessage="La photo article est obligatoire !">
-							</h:inputText>
-							<h:message for="photos" style="color:red"></h:message>
-
-							<h:outputLabel value="videos Article : "></h:outputLabel>
-							<h:inputText id="videos" value="#{articlebean.videos}"
-								required="false"
-								requiredMessage="La videosArticle obligatoire !">
-							</h:inputText>
-							<h:message for="videos" style="color:red"></h:message>
-
-						</h:panelGrid>
-
-						<h:panelGrid columns="3" cellpadding="0" cellspacing="8">
-							<h:commandButton id="addArticle" value="Ajouter article"
-								action="#{articlebean.addArticle()}" />
-							<h:commandButton id="updateArticle" value="Update article"
-								action="#{articlebean.editeArticle()}" />
-							<h:commandButton id="resetCategory" value="Initialiser"
-								action="#{articlebean.initialiseArticle()}" />
-
-						</h:panelGrid>
-
-						<h:panelGroup id="panelMessagess">
-							<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
-								<h:outputText value="#{articlebean.messageSuccess}"
-									style="color:green"></h:outputText>
-								<h:outputText value="#{articlebean.messageError}"
-									style="color:red"></h:outputText>
-							</h:panelGrid>
-						</h:panelGroup>
-
-					</h:panelGroup>
-
-				</h:form>
-
-				<h:form>
-					<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
-						<ui:repeat value="#{articlebean.itemList}" var="a">
-							<h:outputText style="color:blue"
-								value="#{a.name} #{a.description} #{a.prix} #{a.remise} #{a.stock} #{a.isVendable} #{a.photos} #{a.videos}" />
-							<br></br>
-						</ui:repeat>
-					</h:panelGrid>
-
-					<h:panelGroup id="panelMessagess">
-						<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
-							<h:outputText value="#{articlebean.messageSuccess}"
-								style="color:green"></h:outputText>
-							<h:outputText value="#{articlebean.messageError}"
-								style="color:red"></h:outputText>
-						</h:panelGrid>
-					</h:panelGroup>
-
-				</h:form>
-
-				<h:form>
-					<h4>Liste des categories et articles :</h4>
-
-					<h:dataTable id="datatable" value="#{categoriebean.categoryList}"
-						var="categorie" styleClass="order-table"
-						headerClass="order-table-header"
+					<h4>Catégorie sélectionnée :</h4>
+					<h:dataTable id="datatable" border="1" cellpadding="2"
+						cellspacing="3" style="text-align:center"
+						value="#{gestionarticlebean.categorieActuel}"
+						styleClass="order-table" headerClass="order-table-header"
 						rowClasses="order-table-odd-row,order-table-even-row">
 						<h:column>
-							<br />
-							<f:facet name="header">Categorys  </f:facet>
-							<h:outputText value="#{categorie.nomCategorie}" />
-							<h:commandButton value="ModifierCategorie"
-								action="#{categoriebean.updateCategorie(categorie)}" />
-							<h:commandButton value="SupprimerCategorie"
-								action="#{categoriebean.deleteCategorie(categorie)}" />
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{gestionarticlebean.categorieActuel.id}" />
 						</h:column>
-
 						<h:column>
-							<p>---------------------------------</p>
-							<f:facet name="header">Articles</f:facet>
-							<ui:repeat value="#{categorie.items}" var="a">
-								<h:column>
-									<h:column />
-									<h:outputText style="color:blue"
-										value="#{a.id}       #{a.name}" />
-								</h:column>
-								<h:column>
-									<h:commandButton value="SupprimerArticle"
-										action="#{articlebean.deleteArticleById(a.id)}" />
-									<h:commandButton value="ModifierArticle"
-										action="#{articlebean.updateArticle(a.id)}" />
-								</h:column>
-								<br />
-
-							</ui:repeat>
+							<f:facet name="header">
+								<h:outputText value="Nom" />
+							</f:facet>
+							<h:outputText
+								value="#{gestionarticlebean.categorieActuel.nomCategorie}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Remise" />
+							</f:facet>
+							<h:outputText
+								value="#{gestionarticlebean.categorieActuel.remiseCategorie}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="IsCumulable" />
+							</f:facet>
+							<h:outputText
+								value="#{gestionarticlebean.categorieActuel.isRemiseCumulable}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Url_photo" />
+							</f:facet>
+							<h:outputText
+								value="#{gestionarticlebean.categorieActuel.photoCategorie}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Action" />
+							</f:facet>
+							<h:commandLink value="Modifier" style="color:black"
+								action="#{gestionarticlebean.selectCategorieActuel()}">
+								<f:setPropertyActionListener
+									target="#{gestionarticlebean.categorieId}"
+									value="#{gestionarticlebean.categorieActuel.id}" />
+							</h:commandLink>
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Action" />
+							</f:facet>
+							<h:commandLink value="Supprimer" style="color:black"
+								action="#{gestionarticlebean.deleteCategorie()}">
+							</h:commandLink>
 						</h:column>
 					</h:dataTable>
-
 				</h:form>
-
+				<h:form>
+					<h4>List d'articles de catégorie sélectionné :</h4>
+					<h:dataTable id="datatable" border="1" cellpadding="2"
+						cellspacing="3" style="text-align:center"
+						value="#{gestionarticlebean.categorieActuel.items}"
+						var="currentItem">
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{currentItem.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Nom" />
+							</f:facet>
+							<h:outputText value="#{currentItem.name}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Description" />
+							</f:facet>
+							<h:outputText
+								value="#{currentItem.description}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Prix" />
+							</f:facet>
+							<h:outputText value="#{currentItem.prix}">
+								<f:convertNumber type="currency" />
+							</h:outputText>
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Remise" />
+							</f:facet>
+							<h:outputText value="#{currentItem.remise}%" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Stock" />
+							</f:facet>
+							<h:outputText value="#{currentItem.stock}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="IsVendable" />
+							</f:facet>
+							<h:outputText
+								value="#{currentItem.isVendable}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Nom de photo" />
+							</f:facet>
+							<h:outputText value="#{currentItem.photos}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="photo" />
+							</f:facet>
+							<h:graphicImage id="jpgImg" library="images" name="#{currentItem.photos}" width="100" height="120" 
+										class="p1" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Videos" />
+							</f:facet>
+							<h:outputText value="#{currentItem.videos}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Action" />
+							</f:facet>
+							<h:commandLink value="Modifier" style="color:black"
+								action="#{gestionarticlebean.goToPageAddUpdateArticleSelected()}">
+								<f:setPropertyActionListener
+									target="#{gestionarticlebean.articleActuel}"
+									value="#{currentItem}" />
+							</h:commandLink>
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Action" />
+							</f:facet>
+							<h:commandLink value="Supprimer" style="color:black"
+								action="#{gestionarticlebean.deleteArticleById()}">
+								<f:setPropertyActionListener
+									target="#{gestionarticlebean.articleActuel}"
+									value="#{currentItem}" />
+							</h:commandLink>
+						</h:column>
+					</h:dataTable>
+				</h:form>
 			</f:view>
 		</ui:define>
-
 	</ui:composition>
 </body>
 </html>

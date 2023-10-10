@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<h:outputStylesheet library="css" name="common-style.css" />
+<!-- <h:outputStylesheet library="css" name="table-style.css" /> -->
+<title>Jasmin_Achats</title>
+</head>
+
+<body>
+	<ui:composition template="/resources/template/layout.xhtml">
+
+		<!-- Redefinition de la zone 'header' du layout  -->
+		<ui:define name="header">
+			<f:view>
+				<h:form>
+					<div class="header-bar">
+						<div class="logo">
+							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
+						</div>
+						<div class="header-title">
+							<h1>Jasmin</h1>
+						</div>
+
+						<input id="menu-toggle" type="checkbox" /> <label
+							class="menu-button-container" for="menu-toggle">
+							<div class="menu-button"></div>
+						</label>
+
+						<ul class="menu">
+							<li class="user"><p>Hi
+									#{loginbean.connectedUser.firstName}</p></li>
+							<li><h:commandLink
+									action="#{gestionarticlebean.retourEnAchat()}">
+									<h:outputText value="Home"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink action="/panier">
+									<h:outputText
+										value="Panier(#{gestionarticlebean.nombrePanier})"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink action="/historical">
+									<h:outputText value="Historical"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink
+									action="#{gestionarticlebean.seDeconnecter()}">
+									<h:outputText value="Sign out"></h:outputText>
+								</h:commandLink></li>
+						</ul>
+					</div>
+				</h:form>
+			</f:view>
+		</ui:define>
+		<!-- Redefinition de la zone 'content' du layout  -->
+		<ui:define name="content">
+			<f:view>
+				<h:form>
+					<div
+						style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; border-collapse: separate; border-spacing: 1rem; margin: 2rem; padding: 1rem; width: 70vw">
+
+						<div class="article">
+							<h:graphicImage id="jpgImg" library="images"
+								name="#{gestionarticlebean.articleActuel.photos}" width="450"
+								height="550" class="p1" />
+						</div>
+
+						<div style="padding: 2rem; width: 50%">
+							<div style="font-size: 1.5rem; font-weight: bold">
+								<h:outputText
+									value="#{gestionarticlebean.articleActuel.name},#{gestionarticlebean.description}" />
+							</div>
+							<div class="article">
+								<h:outputText
+									value="#{gestionarticlebean.articleActuel.stock} exemplaire(s) en stock " />
+							</div>
+							<div class="article">
+								<h:outputText
+									value="#{gestionarticlebean.articleActuel.remise}% de réduction" />
+							</div>
+							<div style="font-size: 1.5rem; font-weight: bold">
+								<h:outputText value="#{gestionarticlebean.articleActuel.prix}€" />
+							</div>
+							<div style="display: flex; flex-direction: row;margin-top:1rem;">
+								<div>
+									<h:commandButton value="Ajouter au pabier"
+										style="  padding:0.2rem; margin-right: 0.8rem"
+										action="#{gestionarticlebean.addArticlesToPanier()}">
+									</h:commandButton>
+								</div>
+								<div>
+									<h:commandLink value="Page d'accueil" id="retour"
+										style="color:green"
+										action="#{gestionarticlebean.retourEnAchat()}" />
+								</div>
+							</div>
+							<div>
+								<h:panelGroup id="panelMessagess">
+									<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+										<h:outputText value="#{gestionarticlebean.messageSuccess}"
+											style="color:green"></h:outputText>
+										<h:outputText value="#{gestionarticlebean.messageError}"
+											style="color:red"></h:outputText>
+									</h:panelGrid>
+								</h:panelGroup>
+							</div>
+						</div>
+					</div>
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>
+
+

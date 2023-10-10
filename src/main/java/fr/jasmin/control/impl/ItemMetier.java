@@ -5,15 +5,20 @@ import java.util.List;
 import fr.jasmin.control.interfaces.IItemMetier;
 import fr.jasmin.entity.Category;
 import fr.jasmin.entity.Item;
+import fr.jasmin.entity.ItemCart;
 import fr.jasmin.model.dao.impl.CategoryDao;
+import fr.jasmin.model.dao.impl.ItemCartDao;
 import fr.jasmin.model.dao.impl.ItemDao;
 import fr.jasmin.model.dao.interfaces.ICategoryDao;
+import fr.jasmin.model.dao.interfaces.IItemCartDao;
 import fr.jasmin.model.dao.interfaces.IItemDao;
 
 public class ItemMetier implements IItemMetier {
 
 	private final ICategoryDao categoryDao = new CategoryDao();
 	private final IItemDao itemDao = new ItemDao();
+	private final IItemCartDao itemCartDao = new ItemCartDao();
+	
 	Category category = null;
 
 	@Override
@@ -39,6 +44,10 @@ public class ItemMetier implements IItemMetier {
 	public List<String> getCategories() throws Exception {
 		return categoryDao.getCategories();
 	}
+	@Override
+	public List<Category> getCategoriess() throws Exception {
+		return categoryDao.getCategoriess();
+	}
 
 	// La list pour afficher des articles de magasinier
 	@Override
@@ -59,7 +68,7 @@ public class ItemMetier implements IItemMetier {
 
 	@Override
 	public void removeCategory(Integer id) throws Exception {
-		categoryDao.getCategory(id);
+		categoryDao.removeCategory(id);
 
 	}
 
@@ -116,4 +125,51 @@ public class ItemMetier implements IItemMetier {
 		return itemDao.getArticle(id);
 
 	}
+	
+	//*****************************ItemCart******************************************
+	
+	public ItemCart addItemCart(ItemCart itemCart) throws Exception {
+		
+		return itemCartDao.addItemCart(itemCart);
+
+	}
+	
+	public ItemCart getItemCart(Integer id) throws Exception {
+		
+		return itemCartDao.getItemCart(id);
+		
+	}
+	
+	
+	public List<ItemCart> getItemCartList() throws Exception {
+		
+		return itemCartDao.getItemCartList();
+		
+	}
+	
+	public List<ItemCart> getPanierByUserId(Integer userId) throws Exception {
+		
+		return itemCartDao.getPanierByUserId(userId);
+		
+	}
+	
+	
+	public void updateItemCart(ItemCart itemCart) throws Exception {
+		
+		itemCartDao.updateItemCart(itemCart);
+		
+	}
+	
+	
+	public void removeItemCartById(Integer id) throws Exception {
+		
+		itemCartDao.removeItemCartById(id);
+		
+	}
+	public void removeItemCart(ItemCart itemCart) throws Exception {
+		
+		itemCartDao.removeItemCart(itemCart);
+		
+	}
+
 }

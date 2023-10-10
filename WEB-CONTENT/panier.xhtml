@@ -7,12 +7,14 @@
 	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <h:outputStylesheet library="css" name="common-style.css" />
-<title>Jasmin_Panier</title>
+<h:outputStylesheet library="css" name="table-style.css" />
+<title>Jasmin_panier</title>
 </head>
 
 <body>
@@ -29,7 +31,6 @@
 						<div class="header-title">
 							<h1>Jasmin</h1>
 						</div>
-
 						<input id="menu-toggle" type="checkbox" /> <label
 							class="menu-button-container" for="menu-toggle">
 							<div class="menu-button"></div>
@@ -38,10 +39,14 @@
 						<ul class="menu">
 							<li class="user"><p>Hi
 									#{loginbean.connectedUser.firstName}</p></li>
+							<li><h:commandLink action="/gestion_achats.xhtml">
+									<h:outputText value="Home"></h:outputText>
+								</h:commandLink></li>
 							<li><h:commandLink action="/historical">
 									<h:outputText value="Historical"></h:outputText>
 								</h:commandLink></li>
-							<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+							<li><h:commandLink
+									action="#{gestionarticlebean.seDeconnecter()}">
 									<h:outputText value="Sign out"></h:outputText>
 								</h:commandLink></li>
 						</ul>
@@ -53,34 +58,132 @@
 		<ui:define name="content">
 			<f:view>
 				<h:form>
-					<h1>Panier</h1>
-					<h:form>
-						<h4>Listes des categories et articles</h4>
+					<div
+						style="display: flex; flex-direction: row; align-content: strech; width: 80vw">
+						<div
+							style="width: 60vw; display: flex; flew-wrap: wrap; flex-direction: column; justify-content: flex-start border-collapse: collapse; margin-right: 1rem; padding: 0">
+							<div style="border-bottom: 0.5px solid gray; padding: 1rem">
+								<h2>Votre panier : #{gestionarticlebean.nombrePanier}</h2>
+							</div>
+							<div>
+								<c:forEach items="#{gestionarticlebean.panier}" var="p">
+									<div
+										style="display: flex; flex-direction: row; border-bottom: 0.5px dashed gray; border-collapse: collapse; align-content: center; align-items: center; font-size: 1rem; margin: 0;">
+										<div style="padding: 2.5rem">
+											<h:selectBooleanCheckbox id="selectItem"
+												value="#{p.isChecked}">
+												<f:ajax event="change" execute="selectItem"
+													render="prixTotal prixGeneral livraison"
+													listener="#{gestionarticlebean.updateTotalPrix}" />
+											</h:selectBooleanCheckbox>
+										</div>
 
-						<h:dataTable id="datatable" value="#{categoriebean.categoryList}"
-							var="categorie" styleClass="order-table"
-							headerClass="order-table-header"
-							rowClasses="order-table-odd-row,order-table-even-row">
+										<div
+											style="align-content: center; align-items: center; justify-content: center">
+											<h:commandLink
+												action="#{gestionarticlebean.goToPageAchatUnArticle()}">
+												<f:setPropertyActionListener
+													target="#{gestionarticlebean.articleActuel}"
+													value="#{p.item}" />
+												<h:graphicImage id="jpgImg" library="images"
+													name="#{p.item.photos}" width="100" height="140"
+													class="article" />
+											</h:commandLink>
+										</div>
+										<div style="padding: 1rem 2rem; width: 60%">
+											<div style="font-size: 1rem">
+												<h:commandLink
+													action="#{gestionarticlebean.goToPageAchatUnArticle()}">
+													<f:setPropertyActionListener
+														target="#{gestionarticlebean.articleActuel}"
+														value="#{p.item}" />
+													<h:outputText value="#{p.item.name}" style="color: black" />
+												</h:commandLink>
+											</div>
+											<div style="font-size: 1rem; font-weight: bold">
+												<h:outputText value="#{p.prixUnitairApresRemise} €" />
+											</div>
+											<div class="article" >
+												<h:outputText
+													value="#{p.item.stock} exemplaire(s) en stock " />
+											</div>
+											<div style="display: flex; flex-direction: row">
+												<div>
+													<h:outputLabel value="Qté : " />
+													<h:inputText value="#{p.quantite}" size="1"
+														style="text-align:center" maxlength="2">
+														<f:ajax event="change" execute="selectItem"
+															render="prixTotal prixGeneral livraison"
+															listener="#{gestionarticlebean.updateTotalPrix}" />
+													</h:inputText>
+												</div>
+												<div style="padding-left: 0.3rem">
+													<h:commandLink value="Supprimer" style="color:red"
+														action="#{gestionarticlebean.deleteItemCartById()}">
+														<f:setPropertyActionListener
+															target="#{gestionarticlebean.itemCartSelected.id}"
+															value="#{p.id}" />
+													</h:commandLink>
+												</div>
 
-							<h:column>
-								<!-- column header -->
-								<f:facet name="header">Catégorie</f:facet>
-								<!-- row record -->
-								<h:commandButton id="listItem" value="#{categorie.nomCategorie}"
-									action="#{categoriebean.addArticlesToPanier()}">
-								</h:commandButton>
-
-							</h:column>
-
-						</h:dataTable>
-					</h:form>
-
+											</div>
+										</div>
+									</div>
+								</c:forEach>
+							</div>
+							<div>
+								<h:outputText value="#{gestionarticlebean.messageSuccess}"
+									style="color:green"></h:outputText>
+								<h:outputText value="#{gestionarticlebean.messageError}"
+									style="color:red"></h:outputText>
+							</div>
+						</div>
+						<div
+							style="display: flex; flex-direction: column; border: 0.5px solid gray; padding: 2rem 1rem; width: 20vw">
+							<div
+								style="display: flex; flex-direction: row; justify-content: space-between">
+								<h:outputLabel value="Sous-total :" />
+								<h:outputText id="prixTotal"
+									value="#{gestionarticlebean.prixTotal} €" />
+							</div>
+							<div
+								style="display: flex; flex-direction: row; justify-content: space-between">
+								<h:outputLabel value="Livraison :" />
+								<h:outputText id="livraison"
+									value="#{gestionarticlebean.livraison} €" />
+							</div>
+							<div
+								style="border-bottom: 0.1px solid gray; margin: 1rem 0.5rem 1rem 0.5rem"></div>
+							<div
+								style="display: flex; flex-direction: row; justify-content: space-between">
+								<h:outputLabel value="Total(TTC) :" />
+								<h:outputText id="prixGeneral"
+									value="#{gestionarticlebean.prixTotalGeneral} €" />
+							</div>
+							
+							<div style="display: flex; flex-direction: row;margin-top:1rem;">
+								<div>
+									<h:commandButton type="submit" value="Valider le panier"
+									style="  padding:0.2rem; margin-right: 0.8rem"
+									action="#{gestionarticlebean.validerPanier()}" />
+								</div>
+								<div>
+									<h:commandLink value="Retour en achat" id="retour"
+									style="color:green"
+									action="#{gestionarticlebean.retourEnAchat()}" />
+								</div>
+							</div>
+							<div>
+								<h:outputText value="#{gestionarticlebean.messageSuccess}"
+									style="color:green"></h:outputText>
+								<h:outputText value="#{gestionarticlebean.messageError}"
+									style="color:red"></h:outputText>
+							</div>
+						</div>
+					</div>
 				</h:form>
 			</f:view>
 		</ui:define>
-
 	</ui:composition>
 </body>
 </html>
-
-

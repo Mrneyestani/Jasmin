@@ -14,6 +14,7 @@ public class AddressBean {
 	private String number;
 	private String street;
 	private String city;
+	private String country;
 	private String postalCode;
 
 	private static List<Address> addresses = new ArrayList<Address>();
@@ -22,7 +23,7 @@ public class AddressBean {
 	}
 
 	public void addAddress() {
-		Address address = new Address(number, street, city, postalCode);
+		Address address = new Address(number, street, postalCode, city, country );
 		addresses.add(address);
 		initializeAdress();
 	}
@@ -32,6 +33,7 @@ public class AddressBean {
 		this.street = "";
 		this.postalCode = "";
 		this.city = "";
+		this.country = "";
 	}
 
 	public String getNumber() {
@@ -64,6 +66,15 @@ public class AddressBean {
 
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+	}
+	
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 	public List<Address> getAddresses() {

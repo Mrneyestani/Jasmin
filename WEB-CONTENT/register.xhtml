@@ -37,10 +37,10 @@
 						</label>
 
 						<ul class="menu">
-							<li><h:commandLink action="/home">
+							<li><h:commandLink action="#{gestionarticlebean.goToHome()}">
 									<h:outputText value="Home"></h:outputText>
 								</h:commandLink></li>
-							<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+							<li><h:commandLink action="/signIn">
 									<h:outputText value="Sign in"></h:outputText>
 								</h:commandLink></li>
 						</ul>
@@ -52,7 +52,7 @@
 		<ui:define name="content">
 			<f:view>
 				<h:form>
-					<h3>Ajouter d'un utilisateur</h3>
+					<h3>Ajouter un utilisateur</h3>
 					<h:panelGrid id="panel" columns="3" cellpadding="2" cellspacing="1">
 
 						<h:outputLabel value="Nom :" />
@@ -66,14 +66,14 @@
 						<h:outputLabel value="Prénom :" />
 						<h:inputText id="firstName" required="true"
 							value="#{userbean.firstName}"
-							requiredMessage="L'Email est obligatoire !">
+							requiredMessage="Le prénom est obligatoire !">
 							<f:validateLength minimum="3" maximum="30"></f:validateLength>
 						</h:inputText>
 						<h:message for="firstName" style="color:red"></h:message>
 
 						<h:outputLabel value="Email :" />
 						<h:inputText id="email" required="true" value="#{userbean.email}"
-							requiredMessage="L'Email est obligatoire !">
+							requiredMessage="L'email est obligatoire !">
 							<f:validateLength minimum="1" maximum="50"></f:validateLength>
 						</h:inputText>
 						<h:message for="email" style="color:red"></h:message>
@@ -94,25 +94,25 @@
 						</h:inputSecret>
 						<h:message for="motDePasseConfirmation" style="color:red"></h:message>
 
-						<h:outputLabel value="Date de naissance :  (jj/mm/aaaa)" />
+						<h:outputLabel value="Date de naissance (jj/mm/aaaa)" />
 						<h:inputText id="birthDate" required="true"
 							value="#{userbean.birthDate}"
-							requiredMessage="La date de naissance  est obligatoire !">
+							requiredMessage="La date de naissance est obligatoire !">
 							<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
 					(jj/mm/aaaa)
 								<f:validateLength minimum="6" maximum="30"></f:validateLength>
 						</h:inputText>
 						<h:message for="birthDate" style="color:red"></h:message>
 
-						<h:outputLabel value="phone :" />
+						<h:outputLabel value="Portable :" />
 						<h:inputText id="phone" required="true" value="#{userbean.phone}"
-							requiredMessage="Le numéro est obligatoire !">
+							requiredMessage="Le numéro de portable est obligatoire !">
 							<f:validateLength minimum="6" maximum="30"></f:validateLength>
 						</h:inputText>
 						<h:message for="phone" style="color:red"></h:message>
 					</h:panelGrid>
 
-					<h4>Adresse(s) :</h4>
+					<h4>Ajouter une adresse :</h4>
 
 					<h:panelGroup>
 
@@ -129,18 +129,25 @@
 							</h:inputText>
 							<h:message for="rue" style="color:red"></h:message>
 
-							<h:outputLabel value="Ville : "></h:outputLabel>
-							<h:inputText id="ville" value="#{userbean.city}" required="true"
-								requiredMessage="L aville est obligatoire !">
-							</h:inputText>
-							<h:message for="ville" style="color:red"></h:message>
-
 							<h:outputLabel value="Code postal : "></h:outputLabel>
 							<h:inputText id="codePostal" value="#{userbean.postalCode}"
 								required="true"
 								requiredMessage="Le code postal est obligatoire !">
 							</h:inputText>
 							<h:message for="codePostal" style="color:red"></h:message>
+
+							<h:outputLabel value="Ville : "></h:outputLabel>
+							<h:inputText id="ville" value="#{userbean.city}" required="true"
+								requiredMessage="La ville est obligatoire !">
+							</h:inputText>
+							<h:message for="ville" style="color:red"></h:message>
+
+							<h:outputLabel value="Pays : "></h:outputLabel>
+							<h:inputText id="pays" value="#{userbean.country}"
+								required="true" requiredMessage="Le pays est obligatoire !">
+							</h:inputText>
+							<h:message for="pays" style="color:red"></h:message>
+
 						</h:panelGrid>
 
 					</h:panelGroup>
@@ -151,7 +158,7 @@
 					<br></br>
 					<div class="message">
 						<h:link value="Vous avez déjà un compte ? Se connecter"
-							outcome="#{loginbean.seDeconnecter()}" />
+							style="color:green" outcome="/signIn" />
 					</div>
 
 					<h:panelGroup id="panelMessagess">

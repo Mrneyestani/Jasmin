@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<h:outputStylesheet library="css" name="common-style.css" />
+<h:outputStylesheet library="css" name="table-style.css" />
+<title>Modify_User</title>
+</head>
+
+<body>
+
+	<ui:composition template="/resources/template/layout.xhtml">
+
+		<!-- Redefinition de la zone 'header' du layout  -->
+		<ui:define name="header">
+			<f:view>
+				<h:form>
+					<div class="header-bar">
+						<div class="logo">
+							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
+						</div>
+						<div class="header-title">
+							<h1>Jasmin</h1>
+						</div>
+
+						<input id="menu-toggle" type="checkbox" /> <label
+							class="menu-button-container menu-button" for="menu-toggle">
+						</label>
+
+						<ul class="menu">
+							<li class="user"><p>Hi
+									#{loginbean.connectedUser.firstName}</p></li>
+							<li><h:commandLink action="/panier">
+									<h:outputText
+										value="Panier(#{gestionarticlebean.nombrePanier})"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink action="/historical">
+									<h:outputText value="Historical"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink
+									action="#{gestionarticlebean.seDeconnecter()}">
+									<h:outputText value="Sign out"></h:outputText>
+								</h:commandLink></li>
+						</ul>
+					</div>
+				</h:form>
+			</f:view>
+		</ui:define>
+		<!-- Redefinition de la zone 'content' du layout  -->
+		<ui:define name="content">
+			<f:view>
+				<h:form>
+					<h3>Modifier l'information personnelle</h3>
+					<h:panelGrid id="panel" columns="3" cellpadding="2" cellspacing="1">
+
+						<h:outputLabel value="Prénom" />
+						<h:inputText id="firstName" required="true"
+							value="#{userbean.firstName}"
+							requiredMessage="Le prénom est obligatoire !">
+							<f:validateLength minimum="3" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="firstName" style="color:red"></h:message>
+
+
+						<h:outputLabel value="Nom" />
+						<h:inputText id="name" required="true"
+							value="#{userbean.lastName}"
+							requiredMessage="Le nom est obligatoire !">
+							<f:validateLength minimum="3" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="name" style="color:red"></h:message>
+
+						<h:outputLabel value="Email" />
+						<h:inputText id="email" required="true" value="#{userbean.email}"
+							requiredMessage="L'email est obligatoire !">
+							<f:validateLength minimum="1" maximum="50"></f:validateLength>
+						</h:inputText>
+						<h:message for="email" style="color:red"></h:message>
+
+						<h:outputLabel value="Mot de passe"></h:outputLabel>
+						<h:inputSecret id="motDePasse" value="#{userbean.password}"
+							required="false"
+							requiredMessage="Le mot de passe est obligatoire !">
+							<f:validateLength minimum="1" maximum="30" />
+						</h:inputSecret>
+						<h:message for="motDePasse" style="color:red"></h:message>
+
+						<h:outputLabel value="Confirmation Mot de passe : "></h:outputLabel>
+						<h:inputSecret id="motDePasseConfirmation"
+							value="#{userbean.passwordConfirmation}" required="false"
+							requiredMessage="Le mot de passe de confirmation est obligatoire !">
+							<f:validateLength minimum="1" maximum="30" />
+						</h:inputSecret>
+						<h:message for="motDePasseConfirmation" style="color:red"></h:message>
+
+						<h:outputLabel value="Portable" />
+						<h:inputText id="phone" required="true" value="#{userbean.phone}"
+							requiredMessage="La téléphone est obligatoire !">
+							<f:validateLength minimum="6" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="phone" style="color:red"></h:message>
+
+						<h:outputLabel value="Date de naissance (jj/mm/aaaa)" />
+						<h:inputText id="birthDate" required="true"
+							value="#{userbean.birthDate}"
+							requiredMessage="La date de naissance est obligatoire !">
+							<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+							<f:validateLength minimum="6" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="birthDate" style="color:red"></h:message>
+
+					</h:panelGrid>
+
+					<h4>Modifier l'adresse</h4>
+
+					<h:panelGroup>
+
+						<h:panelGrid columns="3" cellpadding="0" cellspacing="8">
+							<h:outputLabel value="Numéro"></h:outputLabel>
+							<h:inputText id="numero" value="#{userbean.number}"
+								required="true" requiredMessage="Le numéro est obligatoire !">
+							</h:inputText>
+							<h:message for="numero" style="color:red"></h:message>
+
+							<h:outputLabel value="Rue"></h:outputLabel>
+							<h:inputText id="rue" value="#{userbean.street}" required="true"
+								requiredMessage="La rue est obligatoire !">
+							</h:inputText>
+							<h:message for="rue" style="color:red"></h:message>
+
+							<h:outputLabel value="Code postal"></h:outputLabel>
+							<h:inputText id="codePostal" value="#{userbean.postalCode}"
+								required="true"
+								requiredMessage="Le code postal est obligatoire !">
+							</h:inputText>
+							<h:message for="codePostal" style="color:red"></h:message>
+
+							<h:outputLabel value="Ville"></h:outputLabel>
+							<h:inputText id="ville" value="#{userbean.city}" required="true"
+								requiredMessage="La ville est obligatoire !">
+							</h:inputText>
+							<h:message for="ville" style="color:red"></h:message>
+
+
+							<h:outputLabel value="Pays"></h:outputLabel>
+							<h:inputText id="pays" value="#{userbean.country}"
+								required="true" requiredMessage="Le pays est obligatoire !">
+							</h:inputText>
+							<h:message for="pays" style="color:red"></h:message>
+						</h:panelGrid>
+					</h:panelGroup>
+
+
+					<div style="display: flex; flex-direction: row;margin-top:1rem">
+						<div>
+							<h:commandButton id="modifier" style="padding:0.3rem; margin-right: 0.5rem" value="Modifier"
+								action="#{userbean.updateConnectedUser()}" />
+						</div>
+						<div>
+							<h:commandButton id="retour" style="padding:0.3rem" value="Retour"
+								action="#{userbean.retourEnCommand()}" />
+						</div>
+					</div>
+
+					<h:panelGroup id="panelMessagess">
+						<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+							<h:outputText value="#{userbean.messageSuccess}"
+								style="color:green"></h:outputText>
+							<h:outputText value="#{userbean.messageError}" style="color:red"></h:outputText>
+						</h:panelGrid>
+					</h:panelGroup>
+
+				</h:form>
+			</f:view>
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>
+
+

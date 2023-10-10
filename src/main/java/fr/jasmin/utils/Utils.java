@@ -9,10 +9,24 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.Part;
+
 public final class Utils implements IUtils {
 	
+	private Utils() {
+	}
 	private static boolean verboseMode = true;
-
+// ------------------------------------------------------------------------------------------------
+	public static String getFileNameFromPart(Part part) {
+		final String partHeader = part.getHeader("content-disposition");
+		for (String content : partHeader.split(";")) {
+			if (content.trim().startsWith("filename")) {
+				String fileName = content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+				return fileName;
+			}
+		}
+		return null;
+	}
 // ------------------------------------------------------------------------------------------------
 	public static Date addDate(Date date, int nbDay) {
 
@@ -155,4 +169,8 @@ public final class Utils implements IUtils {
 	public static void setVerboseMode(boolean verboseMode) {
 		Utils.verboseMode = verboseMode;
 	}
+	
+	// ------------------------------------------------------------------------------------------------
+	
+	
 }

@@ -12,7 +12,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <h:outputStylesheet library="css" name="common-style.css" />
-<title>Gestion Magsinier, Admin et Web Service</title>
+<title>Gestion_Admin</title>
 </head>
 
 <body>
@@ -41,7 +41,8 @@
 							<li><h:commandLink action="/home">
 									<h:outputText value="Home"></h:outputText>
 								</h:commandLink></li>
-							<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+							<li><h:commandLink
+									action="#{gestionarticlebean.seDeconnecter()}">
 									<h:outputText value="Sign out"></h:outputText>
 								</h:commandLink></li>
 						</ul>
@@ -53,96 +54,98 @@
 		<ui:define name="content">
 			<f:view>
 				<h:form>
-					<h3>Ajouter Magasinier/Admin/WebService</h3>
-					<h:panelGrid id="panel" columns="3" cellpadding="2" cellspacing="1">
+				<h3>Ajouter un utilisateur (Magasinier, Admin, WebService, Client)</h3>
+					<h:commandButton id="addUser" value="Ajouter un utilisateur"
+						action="#{userbean.goToAddUserAdmin()}">
+					</h:commandButton>
+					<h3>Sélectionnez un profil pour afficher ses
+						utilisateurs et les modifier</h3>
+					<h:selectOneMenu value="#{userbean.profile}" onchange="submit()"
+						valueChangeListener="#{userbean.profileChange}">
+						<f:selectItems value="#{userbean.profiles}" var="oneProfile"
+							itemValue="#{profile}" itemLabel="#{profile}" />
+					</h:selectOneMenu>
+				</h:form>
+				<h:form>
+					<h4>List des utilisateurs du profil sélectionné :</h4>
+					<h:dataTable id="datatable" border="1" cellpadding="2"
+						cellspacing="3" style="text-align:center"
+						value="#{userbean.listUsersByProfile}" var="currentUser">
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{currentUser.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Prénom" />
+							</f:facet>
+							<h:outputText value="#{currentUser.firstName}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Nom" />
+							</f:facet>
+							<h:outputText value="#{currentUser.lastName}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Email" />
+							</f:facet>
+							<h:outputText value="#{currentUser.email}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Portable" />
+							</f:facet>
+							<h:outputText value="#{currentUser.phone}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Naissance" />
+							</f:facet>
+							<h:outputText value="#{currentUser.birthDate}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="IsActive" />
+							</f:facet>
+							<h:outputText value="#{currentUser.isActif}" />
+						</h:column>
 
-						<h:outputLabel value="Nom :" />
-						<h:inputText id="name" required="true"
-							value="#{userbean.lastName}"
-							requiredMessage="Le nom est obligatoire !">
-							<f:validateLength minimum="3" maximum="30"></f:validateLength>
-						</h:inputText>
-						<h:message for="name" style="color:red"></h:message>
-
-						<h:outputLabel value="Prénom :" />
-						<h:inputText id="firstName" required="true"
-							value="#{userbean.firstName}"
-							requiredMessage="L'Email est obligatoire !">
-							<f:validateLength minimum="3" maximum="30"></f:validateLength>
-						</h:inputText>
-						<h:message for="firstName" style="color:red"></h:message>
-
-						<h:outputLabel value="Email :" />
-						<h:inputText id="email" required="true" value="#{userbean.email}"
-							requiredMessage="L'Email est obligatoire !">
-							<f:validateLength minimum="1" maximum="50"></f:validateLength>
-						</h:inputText>
-						<h:message for="email" style="color:red"></h:message>
-
-						<h:outputLabel value="Mot de passe : "></h:outputLabel>
-						<h:inputSecret id="motDePasse" value="#{userbean.password}"
-							required="true"
-							requiredMessage="Le mot de passe est obligatoire !">
-							<f:validateLength minimum="1" maximum="30" />
-						</h:inputSecret>
-						<h:message for="motDePasse" style="color:red"></h:message>
-
-						<h:outputLabel value="Confirmation Mot de passe : "></h:outputLabel>
-						<h:inputSecret id="motDePasseConfirmation"
-							value="#{userbean.passwordConfirmation}" required="true"
-							requiredMessage="Le mot de passe de confirmation est obligatoire !">
-							<f:validateLength minimum="1" maximum="30" />
-						</h:inputSecret>
-						<h:message for="motDePasseConfirmation" style="color:red"></h:message>
-
-						<h:outputLabel value="Date de naissance :  (jj/mm/aaaa)" />
-						<h:inputText id="birthDate" required="true"
-							value="#{userbean.birthDate}"
-							requiredMessage="La date de naissance  est obligatoire !">
-							<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-					(jj/mm/aaaa)
-								<f:validateLength minimum="6" maximum="30"></f:validateLength>
-						</h:inputText>
-						<h:message for="birthDate" style="color:red"></h:message>
-
-						<h:outputLabel value="Actif :" />
-						<h:selectOneRadio id="isActif" required="true"
-							value="#{userbean.isActif}"
-							requiredMessage="Le choix de actif est obligatoire !">
-							<f:selectItem itemLabel="Oui" itemValue="true" />
-							<f:selectItem itemLabel="Non" itemValue="false" />
-						</h:selectOneRadio>
-						<h:message for="isActif" style="color:red"></h:message>
-
-						<h:outputLabel value="Profile : "></h:outputLabel>
-						<h:selectOneListbox id="profile" value="#{userbean.profile}"
-							required="true" requiredMessage="Le profile est obligatoire !">
-							<f:selectItem itemLabel="Magasinier" itemValue="Magasinier" />
-							<f:selectItem itemLabel="Admin" itemValue="Admin" />
-							<f:selectItem itemLabel="Web service" itemValue="Webservice" />
-						</h:selectOneListbox>
-						<h:message for="profile" style="color:red"></h:message>
-
-						<h:outputLabel value="phone :" />
-						<h:inputText id="phone" required="true" value="#{userbean.phone}"
-							requiredMessage="Le numéro est obligatoire !">
-							<f:validateLength minimum="6" maximum="30"></f:validateLength>
-						</h:inputText>
-						<h:message for="phone" style="color:red"></h:message>
-
-					</h:panelGrid>
-
-					<p></p>
-					<h:commandButton id="valider" value="Valider"
-						action="#{userbean.addUser()}" />
-					<br></br>
-					<h:panelGroup id="panelMessagess">
-						<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
-							<h:outputText value="#{userbean.messageSuccess}"
-								style="color:green"></h:outputText>
-							<h:outputText value="#{userbean.messageError}" style="color:red"></h:outputText>
-						</h:panelGrid>
-					</h:panelGroup>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Action" />
+							</f:facet>
+							<h:commandButton value="Modifier" style="color:black"
+								action="#{userbean.selectUserActuel}">
+								<f:setPropertyActionListener target="#{userbean.userActuel}"
+									value="#{currentUser}" />
+							</h:commandButton>
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Action" />
+							</f:facet>
+							<h:commandButton value="Désactiver" style="color:black"
+								action="#{userbean.desactiveUser}">
+								<f:setPropertyActionListener target="#{userbean.userActuel}"
+									value="#{currentUser}" />
+							</h:commandButton>
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Action" />
+							</f:facet>
+							<h:commandButton value="Supprimer" style="color:black"
+								action="#{userbean.deleteUser()}">
+								<f:setPropertyActionListener target="#{userbean.userActuel}"
+									value="#{currentUser}" />
+							</h:commandButton>
+						</h:column>
+					</h:dataTable>
+					<br />
 				</h:form>
 			</f:view>
 		</ui:define>

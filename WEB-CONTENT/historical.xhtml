@@ -17,6 +17,44 @@
 
 <body>
 	<ui:composition template="/resources/template/layout.xhtml">
+
+		<!-- Redefinition de la zone 'header' du layout  -->
+		<ui:define name="header">
+			<f:view>
+				<h:form>
+					<div class="header-bar">
+						<div class="logo">
+							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
+						</div>
+						<div class="header-title">
+							<h1>Jasmin</h1>
+						</div>
+
+						<input id="menu-toggle" type="checkbox" /> <label
+							class="menu-button-container" for="menu-toggle">
+							<div class="menu-button"></div>
+						</label>
+
+						<ul class="menu">
+							<li class="user"><p>Hi
+									#{loginbean.connectedUser.firstName}</p></li>
+							<li><h:commandLink action="/gestion_achats.xhtml">
+									<h:outputText value="Home"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink
+									action="#{gestionarticlebean.voirPanier()}">
+									<h:outputText
+										value="Panier(#{gestionarticlebean.panier.size()})"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+									<h:outputText value="Sign out"></h:outputText>
+								</h:commandLink></li>
+						</ul>
+					</div>
+				</h:form>
+			</f:view>
+		</ui:define>
+
 		<ui:define name="content">
 			<f:view>
 				<h:form>
@@ -25,7 +63,7 @@
 						<br></br>
 						<div class="message">
 							<h2>Cette page n'existe pas encore</h2>
-							<h:link value="Retours à l'accueil" outcome="/home" />
+							<h:link value="Retours à l'accueil" outcome="/gestion_achats" />
 						</div>
 					</div>
 

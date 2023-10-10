@@ -7,12 +7,15 @@
 	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
+
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <h:outputStylesheet library="css" name="common-style.css" />
-<title>Jasmin_SignUp</title>
+<!-- <h:outputStylesheet library="css" name="table-style.css" /> -->
+<title>Jasmin_Home</title>
 </head>
 
 <body>
@@ -27,7 +30,7 @@
 							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
 						</div>
 						<div class="header-title">
-							<h2>Bienvenu sur Jasmin</h2>
+							<h2>Bienvenu au Jasmin E-Commerce</h2>
 						</div>
 
 						<input id="menu-toggle" type="checkbox" /> <label
@@ -36,14 +39,16 @@
 						</label>
 
 						<ul class="menu">
-							<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+							<li class="user"><p>Hi
+									#{loginbean.connectedUser.firstName}</p></li>
+							<li><h:commandLink
+									action="#{gestionarticlebean.goToHome()}">
+									<h:outputText
+										value="Panier(#{gestionarticlebean.panierUpdate().size()})"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink
+									action="#{loginbean.seDeconnecter()}">
 									<h:outputText value="Sign in"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink action="#{loginbean.enregistrer()}">
-									<h:outputText value="Sign up"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink action="/gestion_articles2">
-									<h:outputText value="gestion_articles2"></h:outputText>
 								</h:commandLink></li>
 						</ul>
 					</div>
@@ -54,18 +59,74 @@
 		<ui:define name="content">
 			<f:view>
 				<h:form>
-					<h2>Jasmin E-commerce</h2>
-					<h:commandLink class="messageHome" action="#{loginbean.enregistrer()}">
-						<h:outputText value="Cliquez ici pour vous inscrire... "></h:outputText>
-					</h:commandLink>
-					<p></p>
-					<h:commandLink class="messageHome" action="#{loginbean.seDeconnecter()}">
-						<h:outputText value="Cliquez ici pour vous connecter... "></h:outputText>
-					</h:commandLink>
+					<div
+						style="display: flex; flex-direction: row; margin: 2rem 0rem 0rem 2rem; padding-left: 2rem">
+						<div>
+							<h3>Catégories :</h3>
+						</div>
+						<div style="margin-left: 0.5rem">
+							<h:selectOneMenu style="padding: 0.3rem; border-reduis:0.5rem"
+								value="#{gestionarticlebean.categorieId}" onchange="submit()"
+								valueChangeListener="#{gestionarticlebean.categorieChange}">
+								<f:selectItems value="#{gestionarticlebean.listCategories}"
+									var="oneCat" itemValue="#{oneCat.id}"
+									itemLabel="#{oneCat.nomCategorie}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div
+						style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; border-collapse: separate; border-spacing: 1rem; margin: 2rem; padding: 1rem; width: 70vw">
+
+						<c:forEach items="#{gestionarticlebean.categorieSelectione.items}"
+							var="currentItem">
+
+							<h:outputStylesheet library="css" name="common-style.css" />
+							<div
+								style="align-content: center; align-items: center; font-size: 1rem; margin: 0.3rem">
+								<div
+									style="align-content: center; align-items: center; justify-content: center">
+									<h:commandLink
+										action="#{gestionarticlebean.goToPageAchatUnArticleHome}">
+										<f:setPropertyActionListener
+											target="#{gestionarticlebean.articleActuel}"
+											value="#{currentItem}" />
+										<h:graphicImage id="jpgImg" library="images"
+											name="#{currentItem.photos}" width="200" height="265"
+											class="article" />
+									</h:commandLink>
+								</div>
+								<div class="article" style="width: 250px">
+									<h:commandLink
+										action="#{gestionarticlebean.goToPageAchatUnArticleHome}">
+										<f:setPropertyActionListener
+											target="#{gestionarticlebean.articleActuel}"
+											value="#{currentItem}" />
+										<h:outputText
+											value="#{currentItem.name},#{currentItem.description}"
+											style="color: black" />
+									</h:commandLink>
+								</div>
+								<div class="article">
+									<h:outputText value="#{currentItem.remise}% de réduction" />
+								</div>
+								<div class="article">
+									<h:outputText
+										value="#{currentItem.stock} exemplaire(s) en stock " />
+								</div>
+									<div class="article" style="font-size: 1rem; font-weight: bold">
+									<h:outputText value="#{currentItem.prix}€" />
+								</div>
+								<div>
+									<h:commandLink value="Ajouter au pabier" style="color:green"
+										action="#{loginbean.seDeconnecter()}">
+									</h:commandLink>
+								</div>
+							</div>
+						</c:forEach>
+					</div>
 				</h:form>
 			</f:view>
 		</ui:define>
-
 	</ui:composition>
 </body>
 </html>

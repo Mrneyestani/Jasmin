@@ -2,27 +2,32 @@
 
 .order-table {
 	border-collapse: collapse;
+	border:1px solid #000000;
+	/* padding: 2rem; */
 }
 
 .order-table-header {
 	text-align: center;
-	background: none repeat scroll 0 0 #E5E5E5;
-	border-bottom: 1px solid #BBBBBB;
-	padding: 16px;
+	background: none repeat scroll 0 0 #B5B5B5;
+	border-bottom: 1px solid #000000;
+	padding:2px;
 }
 
 .order-table-odd-row {
 	text-align: center;
-	background: none repeat scroll 0 0 #E5E5E5;
-	border-top: 1px solid #BBBBBB;
+	background:none repeat scroll 0 0 #FFFFFF;	
+/* 	border-top: 1px solid #BBBBBB;
+	padding: 2rem; */
 }
 
 .order-table-even-row {
 	text-align: center;
-	background: none repeat scroll 0 0 #F9F9F9;
-	border-top: 1px solid #BBBBBB;
+	 background:none repeat scroll 0 0 #D3D3D3;
+	/* border-top: 1px solid #BBBBBB;
+	padding: 2rem; */
 }
 
-.order-table-column {
+/* .order-table-column {
 	background: none repeat scroll 0 0 #F9F9F9;
-}
+	padding: 2rem;
+} */

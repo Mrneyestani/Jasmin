@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<h:outputStylesheet library="css" name="common-style.css" />
+<title>Modify_User</title>
+</head>
+
+<body>
+
+	<ui:composition template="/resources/template/layout.xhtml">
+
+		<!-- Redefinition de la zone 'header' du layout  -->
+		<ui:define name="header">
+			<f:view>
+				<h:form>
+					<div class="header-bar">
+						<div class="logo">
+							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
+						</div>
+						<div class="header-title">
+							<h1>Jasmin</h1>
+						</div>
+
+						<input id="menu-toggle" type="checkbox" /> <label
+							class="menu-button-container menu-button" for="menu-toggle">
+						</label>
+
+						<ul class="menu">
+							<li class="user"><p>Hi
+									#{loginbean.connectedUser.firstName}</p></li>
+							<li><h:commandLink action="/panier">
+									<h:outputText
+										value="Panier(#{gestionarticlebean.nombrePanier})"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink action="/historical">
+									<h:outputText value="Historical"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink
+									action="#{gestionarticlebean.seDeconnecter()}">
+									<h:outputText value="Sign out"></h:outputText>
+								</h:commandLink></li>
+						</ul>
+					</div>
+				</h:form>
+			</f:view>
+		</ui:define>
+		<!-- Redefinition de la zone 'content' du layout  -->
+		<ui:define name="content">
+			<f:view>
+				<h:form>
+					<h3>Ajouter/modifier la carte bancaire</h3>
+					<h:panelGrid id="panel" columns="3" cellpadding="2" cellspacing="1">
+
+						<h:outputLabel value="Numéro de carte" />
+						<h:inputText id="numeroCarte" required="true"
+							value="#{userbean.reelNumber}"
+							requiredMessage="Le numéro est obligatoire !">
+							<f:validateLength minimum="16" maximum="16"></f:validateLength>
+						</h:inputText>
+						<h:message for="numeroCarte" style="color:red"></h:message>
+
+						<h:outputLabel value="Nom sur la carte" />
+						<h:inputText id="nameCarte" required="true"
+							value="#{userbean.nameOwner}"
+							requiredMessage="Le nom est obligatoire !">
+							<f:validateLength minimum="3" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="nameCarte" style="color:red"></h:message>
+
+						<h:outputLabel value="Prénom" />
+						<h:inputText id="firstNameCarte" required="true"
+							value="#{userbean.firstNameOwner}"
+							requiredMessage="Le prénom est obligatoire !">
+							<f:validateLength minimum="3" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="firstNameCarte" style="color:red"></h:message>
+
+
+						<h:outputLabel value="Date de validité :  (mm/aa)" />
+						<h:inputText id="dateValidite" required="true"
+							value="#{userbean.dateFinValidite}"
+							requiredMessage="La date de validité est obligatoire !">
+							<f:convertDateTime pattern="MM/yy"></f:convertDateTime>
+							<f:validateLength minimum="4" maximum="30"></f:validateLength>
+						</h:inputText>
+						<h:message for="dateValidite" style="color:red"></h:message>
+
+						<h:outputLabel value="CVV" />
+						<h:inputText id="cvv" required="true"
+							value="#{userbean.reelCryptogram}"
+							requiredMessage="Le Cryptogram est obligatoire !">
+							<f:validateLength minimum="3" maximum="6"></f:validateLength>
+						</h:inputText>
+						<h:message for="cvv" style="color:red"></h:message>
+					</h:panelGrid>
+
+					<div style="display: flex; flex-direction: row;margin-top:1rem">
+						<div>
+							<h:commandButton id="ajouter" style="padding:0.3rem" value="Ajouter la carte"
+								action="#{userbean.addCarte()}" />
+						</div>
+						<div style="margin: 0 0.5rem 0 0.5rem;">
+							<h:commandButton id="modifier" style="padding:0.3rem" value="Modifier la carte"
+								action="#{userbean.updateCarte()}" />
+						</div>
+						<div>
+							<h:commandButton id="retour" style="padding:0.3rem" value="Retour"
+								action="#{userbean.retourEnCommand()}" />
+						</div>
+					</div>
+
+					<h:panelGroup id="panelMessagess">
+						<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+							<h:outputText value="#{userbean.messageSuccess}"
+								style="color:green"></h:outputText>
+							<h:outputText value="#{userbean.messageError}" style="color:red"></h:outputText>
+						</h:panelGrid>
+					</h:panelGroup>
+
+				</h:form>
+			</f:view>
+		</ui:define>
+
+	</ui:composition>
+</body>
+</html>
+
+

@@ -1,14 +1,20 @@
 package fr.jasmin.vue.backingbean;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.servlet.http.HttpSession;
+
+import com.paypal.base.rest.PayPalRESTException;
 
 import fr.jasmin.common.IConstant;
 import fr.jasmin.control.impl.ItemMetier;
@@ -19,9 +25,13 @@ import fr.jasmin.entity.Category;
 import fr.jasmin.entity.Comment;
 import fr.jasmin.entity.Item;
 import fr.jasmin.entity.ItemCart;
+import fr.jasmin.entity.OrderDetail;
+import fr.jasmin.entity.User;
 import fr.jasmin.model.dao.impl.CategoryDao;
+import fr.jasmin.model.dao.impl.ItemCartDao;
 import fr.jasmin.model.dao.impl.ItemDao;
 import fr.jasmin.model.dao.interfaces.ICategoryDao;
+import fr.jasmin.model.dao.interfaces.IItemCartDao;
 import fr.jasmin.model.dao.interfaces.IItemDao;
 import fr.jasmin.utils.Utils;
 
@@ -35,6 +45,7 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	private final IUserMetier userMetier = new UserMetier();
 	private final ICategoryDao categoryDao = new CategoryDao();
 	private final IItemDao itemDao = new ItemDao();
+	private final IItemCartDao itemCartDao = new ItemCartDao();
 
 	/// ***********************Attributs_article**************************
 
@@ -45,11 +56,12 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	private Float prix;
 	private Integer stock;
 	private Integer remiseArticle;
-	private String photosArticle;
+	private static String photosArticle;
 	private String videosArticle;
-	private Integer quantite = 0;
+	private Integer quantite = 1;
+	private Integer quantiteMax = 10;
+	private Boolean isChecked = false;
 	private Boolean isVendable = true;
-	private Boolean isCheckedArticle = false;
 	private String articleSelectione;
 	private Item articleActuel;
 	private List<Item> listArticles;
@@ -62,28 +74,68 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	private String nomCategorie;
 	private Integer remiseCategorie;
 	private String photoCategorie;
-	private Boolean isRemiseCumulable;
-	private Boolean isActif;
+	private Boolean isRemiseCumulable = true;
+	private Boolean isActif = true;
 	private Category categorie;
-	private String categorieSelectione;
-	protected Category categorieActuel;
+	private Category categorieSelectione;
+	private Category categorieActuel;
 	private List<Category> listCategories;
+
+	/// ***********************Attributs_panier**************************
+
+	private List<ItemCart> panier;
+	private List<ItemCart> panierModifie;
+	private List<ItemCart> panierSelected;
+	private List<String> listItemQuantite;
+	private String itemQiantite;
+	private Integer nombrePanier;
+//	private Integer remiseTotal;
+	private Float prixTotal;
+	private Float livraison;
+	private Float prixTotalGeneral;
+	private Integer idPanier;
+	private User userActuel;
+	private static ItemCart itemCartActuel;
+	private ItemCart itemCartSelected = new ItemCart();
 
 	/// ***********************Attributs_divers**************************
 
 	private List<Comment> commentaires;
-	private List<ItemCart> panier;
 	private String messageSuccess;
 	private String messageError;
 	private Boolean isDataTableRendred;
 	private HashMap<Integer, Integer> mapQuantites = new HashMap<Integer, Integer>();
+//	private LoginBean loginBean = new LoginBean();
+
+	/// ***********************Order details**************************
+	private String product;
+	private String subtotal;
+	private String shipping;
+	private String tax;
+	private String total;
+	private String codePaypalButton;
 
 	/// ***********************Constructeurs**************************
 
+//	 @PostConstruct
+//	    public void init() {
+//	        // Récupérez ici le code HTML généré par PayPal et stockez-le dans codePaypalButton
+//	        codePaypalButton = "<!-- Code HTML généré par PayPal -->";
+//	    }
+//
+//	    public String getCodePaypalButton() {
+//	        return codePaypalButton;
+//	    }
+	
 	public GestionArticlesBean() {
 		messageSuccess = "";
 		messageError = "";
 		isDataTableRendred = false;
+		setLivraison(0f);
+//		quantite = 1;
+		categorieSelectione = new Category();
+		// quantite = 1;
+//		isChecked = false;
 //		articles = new ArrayList<Item>();
 
 		if (this.getListCategories() == null || this.getListCategories().isEmpty()) {
@@ -93,24 +145,79 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		if (this.getListArticles() == null || this.getListArticles().isEmpty()) {
 			this.setListArticles(new ArrayList<Item>());
 		}
+		if (this.getPanier() == null || this.getPanier().isEmpty()) {
+			this.panier = new ArrayList<ItemCart>();
+			nombrePanier = getPanier().size();
+		}
 
 		try {
-			this.listCategories = categoryDao.getCategoriess();
+			this.listCategories = itemMetier.getCategoriess();
+//			getPanierByUserId();
+//			nombrePanier = (getPanier().size()!= 0) ? nombrePanier : 0;
+			if (LoginBean.connectedUser != null) {
+			
+			getPanierByUserId();
+//			setPanier(getPanierByUserId());
+//			this.nombrePanier=getPanier().size();
+			updateTotalPrix();
+//			this.setPanier(itemMetier.getPanierByUserId(LoginBean.connectedUser.getId()));
+//			this.setNombrePanier(this.getPanier().size());
+			Utils.trace("panier au demarage1  : %s\n", getPanier());
+			Utils.trace("nombre panier au demarage  : %s\n", this.nombrePanier);
+			Utils.trace("category Actuel au demarage  : %s\n", this.getCategorieActuel());
+			Utils.trace("size de liste categories au demarage  : %s\n", this.listCategories.size());
+//			} else {
+//			setPanier(null);
+//			this.setNombrePanier(0);
+//			}
+//			}
 //			this.articles = itemDao.getArticles();
+			}
+			setPanier(null);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		if (this.getListCategories().size() > 0) { // prendre l'id (par défaut) du premier de la liste
-			this.setCategorieId(this.getListCategories().get(0).getId());
-			this.categorieActuel = listCategories.get(0);
-			this.categorieActuel.getItems();
+		if (this.listCategories.size() > 0 && this.getCategorieActuel() != null) { // prendre l'id (par défaut) du
+																					// premier de la liste
+			this.setCategorieId(this.getCategorieActuel().getId());
+
+//			this.setCategorieId(this.listCategories.get(0).getId());
+//			this.categorieActuel = this.listCategories.get(0);
+//			this.categorieActuel.getItems();
+//			this.categorieSelectione.setId(this.categorieActuel.getId());
+//			this.categorieSelectione.setIsRemiseCumulable(this.categorieActuel.getIsRemiseCumulable());
+//			this.categorieSelectione.setNomCategorie(this.categorieActuel.getNomCategorie());
+//			this.categorieSelectione.setPhotoCategorie(this.categorieActuel.getPhotoCategorie());
+//			this.categorieSelectione.setRemiseCategorie(this.categorieActuel.getRemiseCategorie());
+			for (Item item : this.getCategorieActuel().getItems()) {
+				if (item.getIsVendable()) {
+					this.categorieSelectione.getItems().add(item);
+				}
+			}
+//			Utils.trace("categorySelection  : %s\n", this.categorieSelectione.getItems());
+//			this.categorieSelectione.getItems();
+
+		} else if (this.listCategories.size() > 0 && this.getCategorieActuel() == null) {
+
+			this.setCategorieId(this.listCategories.get(0).getId());
+			this.setCategorieActuel(this.listCategories.get(0));
+
+			for (Item item : this.getCategorieActuel().getItems()) {
+				if (item.getIsVendable()) {
+					this.categorieSelectione.getItems().add(item);
+				}
+			}
 
 		} else {
-			this.setCategorieId(1);
+//			this.setCategorieId(1);
 			this.categorieActuel = new Category(); // liste vide
+//			this.categorieSelectione = new Category();
 //			this.articleActuel = new Item();
 		}
+
+		
 //		this.setCategorieId(5);								// liste vide
 //		this.setCurrentCategorie( this.getCategorieList()
 //									.get(this.getCategorieId()));
@@ -118,9 +225,81 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	}
 
 	// ------------------------------------action---------------------------------------------
+	public String seDeconnecter() throws Exception {
+
+		try {
+//			UserBean userBean = new UserBean();
+			 ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			 HttpSession session = (HttpSession) externalContext.getSession(false);
+			 if (session != null) {
+		            // Invalider la session
+		            session.invalidate();
+		        }
+//			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+//			this.setNombrePanier(0);
+//			this.setPanier(null);
+//			userBean.setConnectedUser(getUserActuel());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "/signIn.xhtml?faces-redirect=true";
+
+	}
+	// ------------------------------------action---------------------------------------------
+
+//	public String quantiteChange(ValueChangeEvent e) {
+//		this.quantite=1;
+//		quantiteMax=0;
+//		panierModifie = new ArrayList<ItemCart>();
+//		itemCartSelected = new ItemCart();
+//		listItemQuantite = new ArrayList<String>();
+//		
+//
+//		this.quantiteMax =(int)e.getNewValue();
+//		Utils.trace("QuentitéMAx au depart  : %s\n", getQuantiteMax());
+//		try {
+//			if (this.getPanierModifie()== null || this.getPanierModifie().isEmpty()) {
+//			panierModifie = new ArrayList<ItemCart>();
+//			}
+//			if(this.getPanierModifie().size() > 0) {
+//				
+//				this.setItemCartSelected(this.getPanierModifie().get(0));
+//			}
+//			getItemCartSelected().setQuantite(getQuantiteMax());
+//			Utils.trace("ItemCart selected  : %s\n", getItemCartSelected());
+//			itemMetier.updateItemCart(getItemCartSelected());
+//			panierUpdate();
+//			updateTotalPrix();
+//			for (ItemCart itemCart : getPanier()) {
+
+//				setQuantiteMax(itemCart.getItem().getStock());
+//				getListItemQuantite();
+
+//				if(e.getNewValue().equals(itemCart.getQuantite())!=true && itemCart.getIsChecked()==true) {
+//				Utils.trace("Id de Item qui est changé  : %s\n", itemCart.getId());
+//				Utils.trace("Ancienne Quentité : %s\n", itemCart.getQuantite());
+//				this.setQuantite((int) e.getNewValue());
+//				itemCart.setQuantite((int)e.getNewValue());
+//				
+//				Utils.trace("Nouvelle changé  : %s\n", itemCart.getQuantite());
+//				}
+//				updateTotalPrix();
+//				System.out.println("===== La quantité est changée =====");
+//			}
+
+//		} catch (Exception exception) {
+//			messageSuccess = "";
+//			messageError = "Erreur lors de la récupération de la quantité !\n" + exception.getMessage();
+//			exception.printStackTrace();
+//
+//		}
+//		return "";
+//	}
+	// ------------------------------------action---------------------------------------------
 
 	public String categorieChange(ValueChangeEvent e) {
-
+		categorieSelectione = new Category();
 		String pageReturn = null;
 		Utils.trace("categorieChange  : %s\n", this.getCategorieId());
 		Utils.trace("categorieChange  : %s\n", e.getNewValue().toString());
@@ -129,28 +308,36 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		Utils.trace("new categorieId  : %s\n", this.getCategorieId());
 
 		try {
-			this.categorieActuel = itemMetier.getCategory(this.getCategorieId());
-			this.categorieActuel.getItems();
+			this.setCategorieActuel(itemMetier.getCategory(this.getCategorieId()));
+			Utils.trace("Les Items de categorie actuel  : %s\n", this.getCategorieActuel().getItems());
+//			this.categorieActuel.getItems();
+//			this.categorieSelectione.setId(this.categorieActuel.getId());
+//			this.categorieSelectione.setIsRemiseCumulable(this.categorieActuel.getIsRemiseCumulable());
+//			this.categorieSelectione.setNomCategorie(this.categorieActuel.getNomCategorie());
+//			this.categorieSelectione.setPhotoCategorie(this.categorieActuel.getPhotoCategorie());
+//			this.categorieSelectione.setRemiseCategorie(this.categorieActuel.getRemiseCategorie());
+			for (Item item : this.categorieActuel.getItems()) {
+				if (item.getIsVendable()) {
+//					item.setCategory(this.categorieSelectione);
+					this.categorieSelectione.getItems().add(item);
+				}
+			}
+			this.categorieSelectione.getItems();
+			Utils.trace("categorieSelection  : %s\n", this.categorieSelectione.getItems());
 		} catch (Exception exception) {
 			messageSuccess = "";
 			messageError = "Erreur lors de la récupération de categorie !\n" + exception.getMessage();
 			exception.printStackTrace();
 
 		}
+		initialiseArticle();
+		initialiseCategorie();
 		return pageReturn;
 	}
 
 	// ------------------------------------action---------------------------------------------
-//	public Category get
-//
-//	try {
-//		this.setCurrentCategorie(itemMetier.getCategory(this.getCategorieId()));
-//	} catch (Exception exception) {
-//		exception.printStackTrace();
-//	}
-	// ------------------------------------action---------------------------------------------
 
-	public Category addCategorie() throws Exception {
+	public String addCategorie() throws Exception {
 
 		categorieActuel = new Category();
 
@@ -171,13 +358,13 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			listCategories = categoryDao.getCategoriess();
 			categorieId = categorieActuel.getId();
 			listArticlesCategorieActuel = categorieActuel.getItems();
-			messageSuccess = "La categorie : '"+categorieActuel.getNomCategorie()+"' a été ajouté avec succès.";
+			messageSuccess = "La categorie : '" + categorieActuel.getNomCategorie() + "' a été ajouté avec succès.";
 			messageError = "";
 
 		} catch (Exception e) {
 			messageSuccess = "";
-			messageError = "Error lors d'ajouger de categirie : '"+categorieActuel.getNomCategorie()+"'!\n Vérifiez si le nom de categorie exist déjà !\n"
-					+ e.getMessage();
+			messageError = "Error lors d'ajouger de categirie : '" + categorieActuel.getNomCategorie()
+					+ "'!\n Vérifiez si le nom de categorie exist déjà !\n" + e.getMessage();
 			e.printStackTrace();
 			return null;
 		}
@@ -186,7 +373,7 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		initialiseArticle();
 		initialiseCategorie();
 
-		return categorieActuel;
+		return "gestion_articles.xhtml";
 	}
 
 	// ------------------------------------action---------------------------------------------
@@ -250,8 +437,8 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 		System.out.println("Ancienne valeur : " + categorieSelectione);
 		System.out.println("Nouvelle valeur : " + e.getNewValue());
-		isCheckedArticle = false;
-		quantite = 0;
+		isChecked = false;
+		quantite = 1;
 		try {
 			listArticles = itemMetier.getItemsByCategory(e.getNewValue().toString());
 			if (listArticles != null && !listArticles.isEmpty()) {
@@ -271,26 +458,17 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 	// ------------------------------------action---------------------------------------------
 
-	public String validerPanier() {
-
-		ItemCart ic = new ItemCart();
-
-		return "command.xhtml";
-	}
-
-	// ------------------------------------action---------------------------------------------
-
 	public void initialiseCategorie() {
 		this.nomCategorie = "";
 		this.remiseCategorie = null;
-		this.isRemiseCumulable = null;
+		this.isRemiseCumulable = true;
 		this.photoCategorie = "";
 
 	}
 
 	// ------------------------------------action---------------------------------------------
 
-	public Category selectCategorieActuel() {
+	public String selectCategorieActuel() {
 
 //		Category categoryUpdate = new Category();
 
@@ -316,12 +494,12 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			messageError = "Erreur lors de récupération de categorie actuel !\n" + e.getMessage();
 			e.printStackTrace();
 		}
-		return categorieActuel;
+		return "gestion_articles_addUpdate.xhtml";
 	}
 
 	// ------------------------------------action---------------------------------------------
 
-	public Category updateCategorieSelected() {
+	public String updateCategorieSelected() {
 
 //		Category categoryModified = new Category();
 
@@ -359,7 +537,7 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		initialiseCategorie();
 		initialiseArticle();
 
-		return categorieActuel;
+		return "gestion_articles.xhtml";
 
 	}
 
@@ -400,15 +578,14 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 	// ------------------------------------action---------------------------------------------
 
-	public Item addArticle() {
-
+	public String addArticle() {
 		articleActuel = new Item();
 
 		try {
 
 			articleActuel.setName(nomArticle);
 			articleActuel.setDescription(description);
-			articleActuel.setPhotos(photosArticle);
+			articleActuel.setPhotos(FileUploadMBean.getNomPhoto());
 			articleActuel.setVideos(videosArticle);
 			articleActuel.setRemise(remiseArticle);
 			articleActuel.setPrix(prix);
@@ -419,7 +596,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			getCategorieActuel().getItems().add(articleActuel);
 
 //		listArticlesCategorieActuel.add(articleActuel);
-//		getCategorieActuel().getItems().add(articleActuel);
 
 			Utils.trace("Categorie Actuel  : %s\n", getCategorieActuel());
 			itemMetier.addArticle(getArticleActuel());
@@ -438,39 +614,12 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		initialiseArticle();
 		initialiseCategorie();
 
-		return articleActuel;
+		return "gestion_articles.xhtml";
 	}
 
 	// ------------------------------------action---------------------------------------------
 
-	public String addArticlesToPanier() {
-		submit();
-		getListArticles();
-		LoginBean loginBean = new LoginBean();
-		try {
-
-			ItemCart itemCart = new ItemCart();
-			itemCart.setUser(loginBean.getConnectedUser());
-			for (Item item : listArticles) {
-				if (item.getIsChecked() == true) {
-					// mapQuantites.put(item.getId(), item.getQuantite());
-					itemCart.setItem(item);
-					itemCart.setQuantite(item.getQuantite());
-					getPanier().add(itemCart);
-
-				}
-			}
-			userMetier.addPanier(getPanier());
-
-		} catch (Exception e) {
-			messageError = "...";
-		}
-		return "";
-	}
-
-	// ------------------------------------action---------------------------------------------
-
-	public Item selectArticleActuel() {
+	public String selectArticleActuel() {
 
 //		this.articleActuel = new Item();
 ////		   CategorieBean categorieBean = new CategorieBean();
@@ -485,13 +634,17 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 //		}
 
 		try {
+			if (LoginBean.connectedUser == null) {
+				setPanier(null);
+			}
 			Utils.trace("itemId  : %s\n", getArticleId());
-			Utils.trace("itemId  : %s\n", getArticleActuel());
+			Utils.trace("itemId  : %s\n", this.articleActuel);
 			selectCategorieActuel();
 //			this.setArticleActuel(itemMetier.getArticle(this.getArticleId()));
 			this.setNomArticle(getArticleActuel().getName());
 			this.setDescription(getArticleActuel().getDescription());
-			this.setPhotosArticle(getArticleActuel().getPhotos());
+			Utils.trace("photo article actuel : %s\n", getArticleActuel().getPhotos());
+			setPhotosArticle(getArticleActuel().getPhotos());
 			this.setVideosArticle(getArticleActuel().getVideos());
 			this.setRemiseArticle(getArticleActuel().getRemise());
 			this.setPrix(getArticleActuel().getPrix());
@@ -510,14 +663,13 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		}
 		Utils.trace("AtricleActuel  : %s\n", this.getArticleActuel());
 
-		return this.articleActuel;
+		return "";
 
 	}
 
 	// ------------------------------------action---------------------------------------------
 
-	public Item updateArticleSelected() {
-
+	public String updateArticleSelected() {
 //		Item itemModified = new Item();
 
 		Utils.trace("Article avant mis à jour  : %s\n", getArticleActuel());
@@ -530,7 +682,7 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 //			Utils.trace("currentItem  : %s\n", this.currentItem);
 		getArticleActuel().setName(this.nomArticle);
 		getArticleActuel().setDescription(this.description);
-		getArticleActuel().setPhotos(this.photosArticle);
+		getArticleActuel().setPhotos(photosArticle);
 		getArticleActuel().setVideos(this.videosArticle);
 		getArticleActuel().setRemise(this.remiseArticle);
 		getArticleActuel().setPrix(this.prix);
@@ -560,7 +712,7 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		initialiseCategorie();
 		initialiseArticle();
 
-		return getArticleActuel();
+		return "gestion_articles.xhtml";
 	}
 
 	// ------------------------------------action---------------------------------------------
@@ -589,38 +741,570 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 	public void deleteArticleById() {
 		Item articleSupprime = new Item();
-try {
+		try {
 			Utils.trace("Article Actuel : %s\n", getArticleActuel());
 			articleSupprime = getArticleActuel();
 			itemMetier.removeArticle(getArticleActuel().getId());
 			listCategories = categoryDao.getCategoriess();
 			setCategorieActuel(categoryDao.getCategoryByNom(getCategorieActuel().getNomCategorie()));
 			setCategorieId(getCategorieActuel().getId());
-			
+
 			messageSuccess = "l'Article : " + articleSupprime.getName() + " a été supprimé avec succès.";
 			messageError = "";
 
 		} catch (Exception e) {
 			messageSuccess = "";
-			messageError = "Erreur lors de la suppression de l'Article : " + articleSupprime.getName() + " !\n"+ e.getMessage();
+			messageError = "Erreur lors de la suppression de l'Article : " + articleSupprime.getName() + " !\n"
+					+ e.getMessage();
 			e.printStackTrace();
 		}
 	}
 
+	// ------------------------------------action---------------------------------------------
+
+	public String addArticlesToPanier() {
+
+		LoginBean loginBean = new LoginBean();
+
+		itemCartActuel = new ItemCart();
+		try {
+
+//			for (Item item : listArticles) {
+//				if (item.getIsChecked() == true) {
+			// mapQuantites.put(item.getId(), item.getQuantite());
+			if (LoginBean.connectedUser==null&& getPanier()==null){
+				
+				return loginBean.seDeconnecter();
+			}
+			setArticleActuel(itemMetier.getArticle(getArticleActuel().getId()));
+			Utils.trace("itemId  : %s\n", getArticleActuel());
+			Utils.trace("connected user  : %s\n", LoginBean.connectedUser);
+			itemCartActuel.setUser(LoginBean.connectedUser);
+			Utils.trace("itemId  : %s\n", getArticleActuel().getId());
+			itemCartActuel.setItem(getArticleActuel());
+			itemCartActuel.setQuantite(this.getQuantite());
+//			itemCartActuel.setIsChecked(false);
+			Utils.trace("itemId  : %s\n", itemCartActuel);
+			itemMetier.addItemCart(itemCartActuel);
+			getPanierByUserId();
+//			this.panier = getPanierByUserId();
+//			this.setNombrePanier(getPanier().size());
+
+//			Utils.trace("Panier  : %s\n", getPanier());
+//			Utils.trace("nombrePanier  : %s\n", nombrePanier);
+//			Utils.trace("Quentité  : %s\n", itemCartActuel.getQuantite());
+//			Utils.trace("IsChecked  : %s\n", itemCartActuel.getIsChecked());
+
+			messageSuccess = "l'Article : " + getArticleActuel().getName() + " a été ajouté au panier avec succès.";
+			messageError = "";
+			
+			
+			
+//			userMetier.addPanier(getPanier());
+
+		} catch (Exception e) {
+			messageSuccess = "";
+			messageError = "Erreur lors de l'ajout de l'article : " + getArticleActuel().getName() + " au panier !\n"
+					+ e.getMessage();
+			e.printStackTrace();
+		}
+//		Utils.trace("ItemCart  : %s\n", itemCartActuel);
+		initialiseIscheckedQuentite();
+		return "";
+	}
+
+	// ------------------------------------action---------------------------------------------
+
+	public String voirPanier() {
+
+		try {
+			if(nombrePanier==0) {
+				return "gestion_achats.xhtml";
+			}
+			getPanierByUserId();
+			this.setNombrePanier(getPanier().size());
+//			this.setIsChecked(false);
+			messageSuccess = "";
+			messageError = "";
+
+		} catch (Exception e) {
+			messageSuccess = "";
+			messageError = "Erreur lors de la validation du panier !\n" + e.getMessage();
+			e.printStackTrace();
+		}
+
+		return "panier.xhtml";
+
+	}
+
+//------------------------------------action---------------------------------------------
+
+	public List<ItemCart> getPanierByUserId() {
+
+		try {
+			
+//			if (LoginBean.connectedUser != null) {
+			this.setPanier(itemMetier.getPanierByUserId(LoginBean.connectedUser.getId()));
+			this.setNombrePanier(this.getPanier().size());
+//			this.panier = itemMetier.getPanierByUserId(LoginBean.connectedUser.getId());
+//			this.nombrePanier = this.panier.size();
+			messageSuccess = "";
+			messageError = "";
+//			}
+			return null;
+		} catch (Exception e) {
+			messageSuccess = "";
+			messageError = "Erreur lors de la récupération de panier!\n" + e.getMessage();
+			e.printStackTrace();
+		}
+		return panier;
+	}
+
+	// ------------------------------------action---------------------------------------------
+
+	public Integer nombreArticleCommand() {
+		
+		Integer nombreArticleCommand = getPanierModifie().size();
+		return nombreArticleCommand;
+
+	}
+		// ------------------------------------action---------------------------------------------
+		
+		public String validerPanier() {
+
+		if (this.panierSelected() == null || this.panierSelected().isEmpty()) {
+
+			messageError = "Veuillez sélectioner au moins un article dans le panier";
+			messageSuccess = "";
+			return "";
+		}
+		
+		for (ItemCart itemCart : getPanier()) {
+
+			if (itemCart.getQuantite() > itemCart.getItem().getStock()) {
+				
+				messageError = "La quantité disponible en stock pour l'article : " + itemCart.getItem().getName()
+						+ "  est : " + itemCart.getItem().getStock()
+						+ " ,veuillez choisir une quantité inferieur ou égale à "+ itemCart.getItem().getStock();
+				messageSuccess = "";
+				return null;
+			}
+			}
+		panierSelected();
+		getPanierModifie();
+//			panierModifie = new ArrayList<ItemCart>();
+//			for (ItemCart itemCart: getPanierByUser()) {
+//				
+//				if(itemCart.getIsChecked()==true) {
+//					
+//					getPanierModifie().add(itemCart);
+//					
+//				}
+//			}
+		messageSuccess = "Panier a été mis à jour avec succès.";
+		messageError = "";
+		return "/command.xhtml";
+
+	}
+
+	// ------------------------------------action---------------------------------------------
+
+	public List<ItemCart> panierSelected() {
+		panierModifie = new ArrayList<ItemCart>();
+		try {
+//				Utils.trace("FirstPanier  : %s\n", getPanier().get(0));
+			for (ItemCart itemCart : getPanier()) {
+
+				if (itemCart.getIsChecked()) {
+//					itemCart.setQuantite(getQuantite());
+					this.panierModifie.add(itemCart);
+//						Utils.trace("Panier modifie  : %s\n",panierModifie );
+					// for update panier on utilise le code ci-dessous
+//						itemMetier.updateItemCart(itemCart);
+				}
+
+			}
+//				nombrePanier = getPanierModifie().size();
+//				Utils.trace("Panier Modifié : %s\n", getPanierModifie());
+
+//				this.panier = getPanierByUser();
+//				nombrePanier = getPanier().size();
+
+			messageSuccess = "Panier a été séléctioné avec succès.";
+			messageError = "";
+
+		} catch (Exception e) {
+			messageSuccess = "";
+			messageError = "Erreur lors de la séléction de panier." + "!\n" + e.getMessage();
+			e.printStackTrace();
+		}
+
+		return panierModifie;
+
+	}
+	// ------------------------------------action---------------------------------------------
+
+	public List<ItemCart> panierUpdate() {
+		panierModifie = new ArrayList<ItemCart>();
+//		quantite = 0;
+		try {
+//				Utils.trace("FirstPanier  : %s\n", getPanier().get(0));
+			if ( getPanier()== null) {
+				return null;
+			}
+			Utils.trace("getPanier  : %s\n",getPanier() );
+			for (ItemCart itemCart : getPanier()) {
+//				Utils.trace("Quantité de itemCart dans le boucle for  : %s\n", itemCart.getQuantite());
+				if (itemCart.getQuantite() <= itemCart.getItem().getStock()) {
+
+//					itemCart.setQuantite(getQuantite());
+//					quantite += itemCart.getQuantite();
+					this.panierModifie.add(itemCart);
+//						Utils.trace("Panier modifie  : %s\n",panierModifie );
+					// for update panier on utilise le code ci-dessous
+					itemMetier.updateItemCart(itemCart);
+				}
+
+				messageError = "La quantité disponible en stock pour l'article : " + itemCart.getItem().getName()
+						+ "  est : " + itemCart.getItem().getStock()
+						+ " ,veuillez choisir une quantité inferieur ou égale à "+ itemCart.getItem().getStock();
+				messageSuccess = "";
+			
+//				nombrePanier = getPanierModifie().size();
+//				Utils.trace("Panier Modifié : %s\n", getPanierModifie());
+
+//				this.panier = getPanierByUser();
+//				nombrePanier = getPanier().size();
+
+//			messageSuccess = "Panier a été mise à jour avec succès.";
+//			messageError = "";
+
+			}
+			
+		} catch (Exception e) {
+			messageSuccess = "";
+			messageError = "Erreur lors de la séléction de panier." + "!\n" + e.getMessage();
+			e.printStackTrace();
+		}
+
+		return panierModifie;
+
+	}
+
+	// ------------------------------------action---------------------------------------------
+
+	public void updateTotalPrix() {
+
+		panierSelected = new ArrayList<ItemCart>();
+
+		try {
+			if (getPanier() != null) {
+//				
+//				return "";
+//			}
+			System.out.println("===== Checked/unCheked =====");
+			
+			panierUpdate();
+//			Utils.trace("panier : %s\n", panierUpdate());
+			Utils.trace("panier : %s\n", getPanier());
+			
+			for (ItemCart itemCart : getPanier()) {
+
+				if (itemCart.getIsChecked() && itemCart.getQuantite() <= itemCart.getItem().getStock() ) {
+
+//					itemCart.setQuantite(getQuantite());
+					this.panierSelected.add(itemCart);
+//						Utils.trace("Panier modifie  : %s\n",panierModifie );
+					// for update panier on utilise le code ci-dessous
+						itemMetier.updateItemCart(itemCart);
+				}
+
+			}
+			if (panierSelected != null) {
+
+//				getPanierModifie();
+				Utils.trace("panier : %s\n", getPanier());
+				Utils.trace("panier modifie : %s\n", getPanierModifie());
+				Utils.trace("panier selected : %s\n", getPanierSelected());
+				calculPrixTotal();
+				calculLivraison();
+				calculPrixTotalAvecLivraison();
+				setPanierModifie(getPanierSelected());
+
+			} else {
+				setPrixTotal(0.f);
+				setPrixTotalGeneral(0.f);
+				setLivraison(0.f);
+				System.out.println("===== Un Checked =====");
+				messageError = "Veuillez selectioner un article dans le panier ou choisir une quantité inferieur à stock";
+				messageSuccess = "";
+
+			}
+			
+			}
+		} catch (Exception e) {
+			messageSuccess = "";
+			messageError = "Erreur lors de la mise à jour de prisTotal !\n" + e.getMessage();
+			e.printStackTrace();
+		}
+		
+	}
+
+	// ------------------------------------action---------------------------------------------
+
+	public float calculTax() {
+
+		float tax = calculPrixTotal() / 5;
+
+		tax = OrderDetail.withBigDecimal(tax, 2);
+
+		return tax;
+	}
+	// ------------------------------------action---------------------------------------------
+
+	public float calculLivraison() {
+
+		livraison = 0f;
+
+		if (calculPrixTotal() < 100.0f && calculPrixTotal() >= 50.0f) {
+
+			livraison = 10.0f;
+		}
+		if (calculPrixTotal() < 50.0f && calculPrixTotal() >= 10.0f) {
+
+			livraison = 5.0f;
+		}
+		if (calculPrixTotal() < 10.0f && calculPrixTotal() > 0f) {
+
+			livraison = 2.0f;
+		}
+
+		setLivraison(OrderDetail.withBigDecimal(livraison, 2));
+		return getLivraison();
+	}
+	// ------------------------------------action---------------------------------------------
+
+	public Float calculPrixTotal() {
+//			OrderDetail orederDetail = new OrderDetail();
+//			setShipping("10.0");
+//			setTax("10.0");
+		
+			
+		
+		prixTotal = 0f;
+
+		for (ItemCart itemCart : getPanierSelected()) {
+//			itemCart.setQuantite(getQuantite());
+			prixTotal += itemCart.getPrixTotalArticle();
+		}
+		
+
+		setPrixTotal(OrderDetail.withBigDecimal(prixTotal, 2));
+		return getPrixTotal();
+	}
+	// ------------------------------------action---------------------------------------------
+
+	public Float calculPrixTotalAvecLivraison() {
+//			OrderDetail orederDetail = new OrderDetail();
+//			setShipping("10.0");
+//			setTax("10.0");
+		prixTotalGeneral = 0.0f;
+		prixTotalGeneral = calculPrixTotal() + calculLivraison();
+
+		setPrixTotalGeneral(OrderDetail.withBigDecimal(prixTotalGeneral, 2));
+		return getPrixTotalGeneral();
+	}
+
+	// ------------------------------------action---------------------------------------------
+	public void deleteItemCartById() {
+
+		try {
+			Utils.trace("ItemCart Actuel : %s\n", getItemCartSelected().getId());
+
+			itemMetier.removeItemCartById(getItemCartSelected().getId());
+			getPanierByUserId();
+//				panier = itemMetier.getItemCartList();
+			nombrePanier = getPanier().size();
+
+			messageSuccess = "l'itemCart a été supprimé avec succès.";
+			messageError = "";
+
+		} catch (Exception e) {
+			messageSuccess = "";
+			messageError = "Erreur lors de la suppression de l'itemCart!\n" + e.getMessage();
+			e.printStackTrace();
+		}
+
+	}
+	// ------------------------------------action---------------------------------------------
+
+	public void sendDataToServlet() throws IOException {
+		setProduct("SumsungS21");
+		setSubtotal(Float.toString(calculPrixTotal() - calculTax()));
+		setShipping(Float.toString(calculLivraison()));
+		setTax(Float.toString(calculTax()));
+		setTotal(Float.toString(calculPrixTotalAvecLivraison()));
+		Utils.trace("SubTotal : %s\n", getSubtotal());
+		Utils.trace("Livraison : %s\n", getShipping());
+		Utils.trace("Tax : %s\n", getTax());
+		Utils.trace("PrixTotal : %s\n", getTotal());
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		externalContext.redirect("authorize_payment?product=" + getProduct() + "&subtotal=" + getSubtotal()
+				+ "&shipping=" + getShipping() + "&tax=" + getTax() + "&total=" + getTotal());
+	}
+
+//------------------------------------action---------------------------------------------
+	public String submitForm() throws IOException {
+
+//		OrderDetail orderDetail = new OrderDetail();
+//		orderDetail.setProduct("Sumsung S21");
+//		orderDetail.setSubtotal(130.0f);
+//		orderDetail.setShipping(10.0f);
+//		orderDetail.setTax(10.0f);
+//		orderDetail.setTotal(150.0f);
+
+//		sendDataToServlet("product", "Sumsung S21");
+//		sendDataToServlet("subtotal", "130.0");
+//		sendDataToServlet("shipping", "10.0");
+//		sendDataToServlet("tax", "10.0");
+//		sendDataToServlet("total", "150.0");
+//		 
+
+//		String approvalLink = null;
+//		try {
+//			PaymentServices paymentServices = new PaymentServices();
+//			approvalLink = paymentServices.authorizePayment(orderDetail);
+//		} catch (PayPalRESTException e) {
+//			
+//			e.printStackTrace();
+//		}
+		return "";
+
+	}
+//------------------------------------action---------------------------------------------
+
+	public String payer() throws PayPalRESTException {
+
+//		AuthorizePaymentServlet authorizePaymentServlet = new AuthorizePaymentServlet();
+//		AuthorizePaymentServlet();
+		// authorizePaymentServlet.doPost(HttpServletRequest request,
+		// HttpServletResponse response);
+
+//		try {
+//			PaymentServices paymentServices = new PaymentServices();
+//			String approvalLink = paymentServices.authorizePayment();
+
+//			response.sendRedirect(approvalLink);
+
+//		} catch (PayPalRESTException ex) {
+//			request.setAttribute("errorMessage", ex.getMessage());
+//			ex.printStackTrace();
+//			request.getRequestDispatcher("error.jsp").forward(request, response);
+//		}
+
+		return "/authorize_payment";
+	}
+
+//===========================================================	
+	public String goToHome() throws Exception {
+		
+//		LoginBean loginBean = new LoginBean();
+//		loginBean.seDeconnecter();
+		initialiseUserPanier();
+		
+		messageSuccess = "";
+		messageError = "";
+
+		return "home.xhtml";
+	}
+//===========================================================	
+	public String goToPageAddUpdateInitialised() {
+		
+		initialiseArticle();
+		messageSuccess = "";
+		messageError = "";
+		
+		return "gestion_articles_addUpdate.xhtml";
+	}
+
+//===========================================================	
+	public String goToPageAddUpdateArticleSelected() {
+
+		selectArticleActuel();
+		messageSuccess = "";
+		messageError = "";
+
+		return "gestion_articles_addUpdate.xhtml";
+	}
+
+//===========================================================	
+	public String goToPageAchatUnArticle() {
+
+		selectArticleActuel();
+		messageSuccess = "";
+		messageError = "";
+
+		return "gestion_achats_unArticle.xhtml";
+	}
+//===========================================================	
+	public String goToPageAchatUnArticleHome() {
+		
+		selectArticleActuel();
+		messageSuccess = "";
+		messageError = "";
+		
+		return "gestion_achats_unArticleHome.xhtml";
+	}
 //------------------------------------action---------------------------------------------
 
 	public void initialiseArticle() {
 		this.nomArticle = "";
 		this.description = "";
-		this.photosArticle = "";
+		GestionArticlesBean.photosArticle = "";
 		this.videosArticle = "";
 		this.remiseArticle = null;
 		this.prix = null;
 		this.stock = null;
 
-		this.isVendable = false;
+		this.isVendable = true;
 
 	}
+//------------------------------------action---------------------------------------------
+	
+	public void initialiseUserPanier() {
+		LoginBean.setConnectedUser(null); 
+			setPanier(null);
+	}
+
+	// ---------------------------------------------------------------------------------
+
+	public void initialiseIscheckedQuentite() {
+		this.quantite = 1;
+		this.isChecked = false;
+	}
+
+	// ---------------------------------------------------------------------------------
+	public String retourEnAchat() {
+		
+		messageSuccess = "";
+		messageError = "";
+		
+		if (LoginBean.connectedUser == null) {
+			return "home.hxtml";
+		}
+
+		return "gestion_achats.xhtml";
+	}
+
+	// ---------------------------------------------------------------------------------
+	public String retourEnGestionArticle() {
+
+		messageSuccess = "";
+		messageError = "";
+
+		return "gestion_articles.xhtml";
+	}
+	// ---------------------------------------------------------------------------------
 
 	// ------------------------------------getters/setters---------------------------------------------
 
@@ -638,6 +1322,14 @@ try {
 
 	public void setArticleId(Integer articleId) {
 		this.articleId = articleId;
+	}
+
+	public Integer getIdPanier() {
+		return idPanier;
+	}
+
+	public void setIdPanier(Integer idPanier) {
+		this.idPanier = idPanier;
 	}
 
 	public String getNomArticle() {
@@ -680,12 +1372,12 @@ try {
 		this.isVendable = isVendable;
 	}
 
-	public String getPhotosArticle() {
+	public static String getPhotosArticle() {
 		return photosArticle;
 	}
 
-	public void setPhotosArticle(String photosArticle) {
-		this.photosArticle = photosArticle;
+	public static void setPhotosArticle(String photosArticle) {
+		GestionArticlesBean.photosArticle = photosArticle;
 	}
 
 	public String getVideosArticle() {
@@ -744,12 +1436,12 @@ try {
 		this.quantite = quantite;
 	}
 
-	public Boolean getIsCheckedArticle() {
-		return isCheckedArticle;
+	public Boolean getIsChecked() {
+		return isChecked;
 	}
 
-	public void setIsCheckedArticle(Boolean isCheckedArticle) {
-		this.isCheckedArticle = isCheckedArticle;
+	public void setIsChecked(Boolean isChecked) {
+		this.isChecked = isChecked;
 	}
 
 	public Integer getIdCategorie() {
@@ -816,11 +1508,11 @@ try {
 		this.categorie = categorie;
 	}
 
-	public String getCategorieSelectione() {
+	public Category getCategorieSelectione() {
 		return categorieSelectione;
 	}
 
-	public void setCategorieSelectione(String categorieSelectione) {
+	public void setCategorieSelectione(Category categorieSelectione) {
 		this.categorieSelectione = categorieSelectione;
 	}
 
@@ -887,5 +1579,182 @@ try {
 	public void setListArticlesCategorieActuel(List<Item> listArticlesCategorieActuel) {
 		this.listArticlesCategorieActuel = listArticlesCategorieActuel;
 	}
+
+	public Integer getNombrePanier() {
+		return nombrePanier;
+	}
+
+	public void setNombrePanier(Integer nombrePanier) {
+		this.nombrePanier = nombrePanier;
+	}
+
+	public User getUserActuel() {
+		return userActuel;
+	}
+
+	public void setUserActuel(User userActuel) {
+		this.userActuel = userActuel;
+	}
+
+	public static ItemCart getItemCartActuel() {
+		return itemCartActuel;
+	}
+
+	public static void setItemCartActuel(ItemCart itemCartActuel) {
+		GestionArticlesBean.itemCartActuel = itemCartActuel;
+	}
+
+	public List<ItemCart> getPanierModifie() {
+		return panierModifie;
+	}
+
+	public void setPanierModifie(List<ItemCart> panierModifie) {
+		this.panierModifie = panierModifie;
+	}
+
+	public String getProduct() {
+		return product;
+	}
+
+	public void setProduct(String product) {
+		this.product = product;
+	}
+
+	public String getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(String subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public String getShipping() {
+		return shipping;
+	}
+
+	public void setShipping(String shipping) {
+		this.shipping = shipping;
+	}
+
+	public String getTax() {
+		return tax;
+	}
+
+	public void setTax(String tax) {
+		this.tax = tax;
+	}
+
+	public String getTotal() {
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
+	}
+
+	public Float getPrixTotal() {
+		return prixTotal;
+	}
+
+	public void setPrixTotal(Float prixTotal) {
+		this.prixTotal = prixTotal;
+	}
+
+	public ItemCart getItemCartSelected() {
+		return itemCartSelected;
+	}
+
+	public void setItemCartSelected(ItemCart itemCartSelected) {
+		this.itemCartSelected = itemCartSelected;
+	}
+
+	public Float getPrixTotalGeneral() {
+		return prixTotalGeneral;
+	}
+
+	public void setPrixTotalGeneral(Float prixTotalGeneral) {
+		this.prixTotalGeneral = prixTotalGeneral;
+	}
+
+	public List<String> getListItemQuantite() {
+		listItemQuantite = new ArrayList<String>();
+//		listItemQuantites = new ArrayList<String>();
+//		for (ItemCart itemCart : getPanier()) {
+//			setQuantiteMax(itemCart.getItem().getStock());
+//		if (getQuantiteMax()>=10) {
+//			setQuantiteMax(10);
+//		}
+
+		for (Integer i = 1; i <= 10; i++) {
+
+			listItemQuantite.add(i.toString());
+		}
+//		listItemQuantites.addAll(listItemQuantite);
+		return listItemQuantite;
+	}
+//	}
+
+	public void setListItemQuantite(List<String> listItemQuantite) {
+		this.listItemQuantite = listItemQuantite;
+	}
+
+	public Integer getQuantiteMax() {
+		return quantiteMax;
+	}
+
+	public void setQuantiteMax(Integer quantiteMax) {
+		this.quantiteMax = quantiteMax;
+	}
+
+	public String getItemQiantite() {
+		return itemQiantite;
+	}
+
+	public void setItemQiantite(String itemQiantite) {
+		this.itemQiantite = itemQiantite;
+	}
+
+	public List<ItemCart> getPanierSelected() {
+		return panierSelected;
+	}
+
+	public void setPanierSelected(List<ItemCart> panierSelected) {
+		this.panierSelected = panierSelected;
+	}
+
+	public Float getLivraison() {
+		return livraison;
+	}
+
+	public void setLivraison(Float livraison) {
+		this.livraison = livraison;
+	}
+
+//	public Integer getRemiseTotal() {
+//		
+//		if (getItemCartActuel().getItem().getCategory().getIsRemiseCumulable()) {
+//			
+//			remiseTotal = getItemCartActuel().getItem().getRemise() + getItemCartActuel().getItem().getCategory().getRemiseCategorie();
+//		}else {
+//		
+//		remiseTotal = getItemCartActuel().getItem().getRemise();
+//		
+//		}
+//		
+//		return remiseTotal;
+//	}
+//
+//	public void setRemiseTotal(Integer remiseTotal) {
+//		this.remiseTotal = remiseTotal;
+//	}
+//
+//	public Float getPrixTotal() {
+//		prixTotal  = getItemCartActuel().getQuantite()*(getItemCartActuel().getItem().getPrix() - getItemCartActuel().getItem().getPrix()*getRemiseTotal()/100);
+//		return prixTotal;
+//	}
+//
+//	public void setPrixTotal(Float prixTotal) {
+//		this.prixTotal = prixTotal;
+//	}
 
 }

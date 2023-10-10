@@ -14,7 +14,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <h:outputStylesheet library="css" name="common-style.css" />
 <h:outputStylesheet library="css" name="table-style.css" />
-<title>Jasmin_command</title>
+<title>Jasmin_panier</title>
 </head>
 
 <body>
@@ -39,13 +39,18 @@
 						<ul class="menu">
 							<li class="user"><p>Hi
 									#{loginbean.connectedUser.firstName}</p></li>
+							<li><h:commandLink action="/gestion_achats.xhtml">
+									<h:outputText value="Home"></h:outputText>
+								</h:commandLink></li>
 							<li><h:commandLink action="/panier">
-									<h:outputText value="Panier(n)"></h:outputText>
+									<h:outputText
+										value="Panier(#{gestionarticlebean.nombrePanier})"></h:outputText>
 								</h:commandLink></li>
 							<li><h:commandLink action="/historical">
 									<h:outputText value="Historical"></h:outputText>
 								</h:commandLink></li>
-							<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+							<li><h:commandLink
+									action="#{gestionarticlebean.seDeconnecter()}">
 									<h:outputText value="Sign out"></h:outputText>
 								</h:commandLink></li>
 						</ul>
@@ -57,50 +62,186 @@
 		<ui:define name="content">
 			<f:view>
 				<h:form>
-					<h1>Command</h1>
-					<h:form>
-						<h4>Listes des articles dans le panier</h4>
-						<h:dataTable id="datatable" value="#{categoriebean.items}"
-							rendered="#{categoriebean.isDataTableRendred()}" var="i"
-							styleClass="order-table" headerClass="order-table-header"
-							rowClasses="order-table-odd-row, order-table-even-row">
+					<div
+						style="display: flex; flex-direction: row; align-content: strech; width: 80vw">
+						<div
+							style="width: 60vw; display: flex; flew-wrap: wrap; border-bottom: 0.5px solid gray; margin: 1rem; flex-direction: column; justify-content: flex-start border-collapse: collapse; padding: 0">
+							<div
+								style="display: flex; flex-direction: row; justify-content: space-between; border-bottom: 0.5px solid gray; margin-top: 0.5rem">
+								<div style="display: flex; flex-direction: row;">
+									<div>
+										<h4>1. Adresse de livraison</h4>
+									</div>
+									<div style="margin-left: 0.5rem">
+										<div>
+											<h:outputText
+												value="#{userbean.userClientById.firstName} #{userbean.userClientById.lastName}" />
+										</div>
+										<div>
+											<ui:repeat value="#{userbean.userClientById.addresses}"
+												var="a">
+												<div>
+													<h:outputText style="color:black"
+														value="#{a.number}, #{a.street}" />
+												</div>
+												<div>
+													<h:outputText style="color:black"
+														value="#{a.postalCode}, #{a.city}, #{a.country}" />
+												</div>
+											</ui:repeat>
+										</div>
+										<div>
+											<h:outputText value="#{userbean.userClientById.phone}" />
+										</div>
+									</div>
+								</div>
+								<div style="margin: 0.5rem;">
+									<h:commandLink id="modifier" style="color:green"
+										value="Modifier" action="#{userbean.selectConectedUser()}" />
+								</div>
+							</div>
+							<div
+								style="display: flex; flex-direction: column; border-bottom: 0.5px solid gray;">
+								<div
+									style="display: flex; flex-direction: row; justify-content: space-between; margin-top: 1rem">
+									<div style="display: flex; flex-direction: row;">
+										<div>
+											<h4>2. Mode de paiement</h4>
+										</div>
+										<div style="margin-left: 0.5rem">
+											<div style="display: flex; flex-direction: row;">
+												<h:outputLabel style="margin-right: 0.5rem" value="Nom :" />
+												<h:outputText
+													value="#{userbean.carteByUserId.firstNameOwner} #{userbean.carteByUserId.nameOwner}" />
+											</div>
+											<div style="display: flex; flex-direction: row;">
+												<h:outputLabel style="margin-right: 0.5rem"
+													value="N° cart :" />
+												<h:outputText style="display:flex; text-align:center"
+													value="#{userbean.decrypteNumberCarte()}" />
+											</div>
+										</div>
+									</div>
+									<div style="margin: 0.5rem">
+										<h:commandLink id="ajouter" style="color:green"
+											value="Modifier" action="#{userbean.selectCarteUser()}" />
+									</div>
+								</div>
+								<div>
+									<h:panelGroup id="panelMessagess">
+										<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+											<h:outputText value="#{userbean.messageSuccess}"
+												style="color:green"></h:outputText>
+											<h:outputText value="#{userbean.messageError}"
+												style="color:red"></h:outputText>
+										</h:panelGrid>
+									</h:panelGroup>
+								</div>
+							</div>
+							<div
+								style="display: flex; flex-direction: column; margin-top: 0.5rem">
+								<div>
+									<h4>3. vérification et validation</h4>
+								</div>
+								<div>
+									<c:forEach items="#{gestionarticlebean.panierModifie}" var="p">
+										<div
+											style="display: flex; flex-direction: row; border: 0.5px dashed gray; border-collapse: collapse; align-content: center; align-items: center; font-size: 1rem; margin: 0.3rem; padding-left: 1rem; border-radius: 0.5rem">
+											<div
+												style="align-content: center; align-items: center; justify-content: center">
+												<h:commandLink
+													action="#{gestionarticlebean.goToPageAchatUnArticle()}">
+													<f:setPropertyActionListener
+														target="#{gestionarticlebean.articleActuel}"
+														value="#{p.item}" />
+													<h:graphicImage id="jpgImg" library="images"
+														name="#{p.item.photos}" width="70" height="80" class="p1" />
+												</h:commandLink>
+											</div>
+											<div style="padding: 1rem 2rem; width: 60%">
+												<div style="font-size: 1rem">
+													<h:commandLink
+														action="#{gestionarticlebean.goToPageAchatUnArticle()}">
+														<f:setPropertyActionListener
+															target="#{gestionarticlebean.articleActuel}"
+															value="#{p.item}" />
+														<h:outputText value="#{p.item.name}" style="color: black" />
+													</h:commandLink>
+												</div>
+												<div style="font-size: 1rem; font-weight: bold">
+													<h:outputText value="#{p.prixUnitairApresRemise} €" />
+												</div>
+												<div style="display: flex; flex-direction: row">
+													<div>
+														<h:outputText value="Qté : #{p.quantite}" size="1"
+															style="text-align:center" maxlength="2">
+														</h:outputText>
+													</div>
+												</div>
+											</div>
+										</div>
+									</c:forEach>
+								</div>
+								<div
+									style="display: flex; flex-direction: row; justify-content: space-between; border-top: 0.5px solid gray; margin-top: 0.5rem; padding: 0.5rem">
+									<div style="display: flex; flex-direction: row;">
+										<h:outputLabel value="Le montant total (TTC) à payer : " />
+										<h:outputText
+											value="#{gestionarticlebean.calculPrixTotal()} €" />
+									</div>
+									<div>
+										<h:commandLink style="color:green" value="Retour en achat"
+											action="#{gestionarticlebean.retourEnAchat()}" />
+									</div>
+								</div>
+							</div>
+						</div>
 
-							<h:column>
-								<f:facet name="header">Nom Article</f:facet>
-								<h:outputText value="#{map.getKey()}" />
-							</h:column>
+						<div
+							style="display: flex; flex-direction: column; border: 0.5px solid gray; padding: 2rem 1rem; width: 20vw; border-radius: 0.5rem">
 
-							<h:column>
-								<f:facet name="header">Prix</f:facet>
-								<h:outputText value="#{i.price}" />
-							</h:column>
-
-							<h:column>
-								<f:facet name="header">Quantité</f:facet>
-								<h:inputText value="#{i.quantite}" size="1"
-									style="text-align:center" maxlength="1"></h:inputText>
-							</h:column>
-
-							<h:column>
-								<f:facet name="header">Sélection</f:facet>
-								<h:selectBooleanCheckbox value="#{i.isChecked}"></h:selectBooleanCheckbox>
-							</h:column>
-						</h:dataTable>
-						<p></p>
-						<h:commandButton type="submit" id="ajouterPanier"
-							value="Ajouter Panier"
-							action="#{categoriebean.addArticlesToPanier()}" />
-
-						<h:commandButton id="validerPanier" value="Valider Panier"
-							action="#{articlebean.validerPanier()}" />
-						<br></br>
-
-					</h:form>
+							<div>
+								<h4>Récapitulatif de commande</h4>
+							</div>
+							<div
+								style="display: flex; flex-direction: row; justify-content: space-between">
+								<h:outputLabel value="Nombre d'article :" />
+								<h:outputText id="nombreArticle"
+									value="#{gestionarticlebean.nombreArticleCommand()}" />
+							</div>
+							<div
+								style="display: flex; flex-direction: row; justify-content: space-between">
+								<h:outputLabel value="Sous-total :" />
+								<h:outputText id="prixTotal"
+									value="#{gestionarticlebean.prixTotal} €" />
+							</div>
+							<div
+								style="display: flex; flex-direction: row; justify-content: space-between">
+								<h:outputLabel value="Livraison :" />
+								<h:outputText id="livraison"
+									value="#{gestionarticlebean.livraison} €" />
+							</div>
+							<div
+								style="border-bottom: 0.1px solid gray; margin: 1rem 0.5rem 1rem 0.5rem">
+							</div>
+							<div
+								style="display: flex; flex-direction: row; justify-content: space-between">
+								<h:outputLabel value="Total(TTC) :" />
+								<h:outputText id="prixGeneral"
+									value="#{gestionarticlebean.prixTotalGeneral} €" />
+							</div>
+							<div
+								style="display: flex; justify-content: center; margin-top: 1rem">
+								<h:commandButton value="Payer" style="width:15vw"
+									action="#{gestionarticlebean.sendDataToServlet()}"
+									image="https://www.paypalobjects.com/digitalassets/c/website/marketing/apac/C2/logos-buttons/optimize/Full_Online_Tray_RGB.png"
+									border="0" alt="PayPal Acceptance Mark" />
+							</div>
+						</div>
+					</div>
 				</h:form>
 			</f:view>
 		</ui:define>
 	</ui:composition>
 </body>
 </html>
-
-

@@ -18,8 +18,8 @@ public class AddUser {
 			System.out.println("***********************début de test**********************");
 			IUserDao userDao = new UserDao();
 
-			Address address1 = new Address("12", "Rue Paul Vaillant Couturier", "Paris", "75000");
-			Address address2 = new Address("3", "Avenue Victor Hugo", "Lyon", "69000");
+			Address address1 = new Address("12", "Rue Paul Vaillant Couturier","75000", "Paris", "France" );
+			Address address2 = new Address("3", "Avenue Victor Hugo","69000", "Lyon", "France");
 
 			User user = new User();
 			user.setLastName("dupont");

@@ -1,6 +1,6 @@
 # Jasmin
 
-## branch Feature V7
+## branch Feature V8
 
-Début 14/06/2023 à 19h45
-le 15/06/2023 à 18h07 : page gestion article fonctionne bien pour affichage, ajouter, modifier et supprimer des articles et categiries
+Cette version est finaliser le 10/10/2023 à 9h.00
+L'interface graphique fonctione bien et la page achat, panier et commande fonctionent bien, mode paiement carte bancaire et paypal sont ajoutés.

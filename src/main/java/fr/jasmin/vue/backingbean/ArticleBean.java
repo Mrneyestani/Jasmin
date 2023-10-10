@@ -2,6 +2,7 @@ package fr.jasmin.vue.backingbean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import fr.jasmin.control.interfaces.IItemMetier;
 import fr.jasmin.entity.Comment;
 import fr.jasmin.entity.Item;
 import fr.jasmin.entity.ItemCart;
+import fr.jasmin.entity.User;
 import fr.jasmin.model.dao.impl.ItemDao;
 import fr.jasmin.model.dao.interfaces.IItemDao;
 import fr.jasmin.utils.Utils;
@@ -26,6 +28,40 @@ public class ArticleBean implements Serializable {
 	private final IItemDao itemDao = new ItemDao();
 	private final IItemMetier itemMetier = new ItemMetier();
 //	private final CategorieBean categorieBean = new CategorieBean();
+	
+	
+	private Integer idCommande;
+	private Integer numeroCommande;
+	private Date dateCreation;
+	private Date dateLivraison;
+	private Integer totalRemise;
+	private Float fraisExpediation;
+	private Float totalGeneral;
+	private String adresseFacturation;
+	private String adresseLivraison;
+	private String cartePaiementDefaut;
+	
+	/// ***********************Attributs_categorie**************************
+
+	private Integer remiseCategorie;
+	private Boolean isRemiseCumulable = true;
+
+	/// ***********************Attributs_panier**************************
+
+	private List<ItemCart> panier;
+	private List<ItemCart> panierModifie;
+	private Integer nombrePanier;
+	private User userActuel;
+	private ItemCart itemCartActuel;
+
+	/// ***********************Attributs_divers**************************
+
+	private List<Comment> commentaires;
+	private String messageSuccess;
+	private String messageError;
+	private Boolean isDataTableRendred;
+	private LoginBean loginBean = new LoginBean();
+	
 	
 	private Integer id;
 	private Integer itemId;
@@ -45,7 +81,6 @@ public class ArticleBean implements Serializable {
 
 	private String photos;
 	private String videos;
-	private List<Comment> commentaires = new ArrayList<Comment>();
 	private List<Item> itemList;
 	private static List<Item> listItem = new ArrayList<Item>();
 	private List<Item> items;
@@ -53,10 +88,7 @@ public class ArticleBean implements Serializable {
 	private Item currentItem;
 	private Integer quantite = 0;
 	private Boolean isChecked = false;
-	private String messageSuccess;
-	private String messageError;
 	private HashMap<Integer, Integer> mapQuantites = new HashMap<Integer, Integer>();
-	private List<ItemCart> panier;
 
 	public ArticleBean() {
 		
@@ -122,22 +154,22 @@ public class ArticleBean implements Serializable {
 		initialiseArticle();
 	}
 
-	public String addArticlesToPanier() {
-		try {
-
-			submit();
-//			items = categorieBean.getItems();
-			for (Item item : items) {
-				if (item.getIsChecked() == true) {
-
-					mapQuantites.put(item.getId(), item.getQuantite());
-				}
-			}
-		} catch (Exception e) {
-			messageError = "...";
-		}
-		return "";
-	}
+//	public String addArticlesToPanier() {
+//		try {
+//
+//			submit();
+////			items = categorieBean.getItems();
+//			for (Item item : items) {
+//				if (item.getIsChecked() == true) {
+//
+//					mapQuantites.put(item.getId(), item.getQuantite());
+//				}
+//			}
+//		} catch (Exception e) {
+//			messageError = "...";
+//		}
+//		return "";
+//	}
 //------------------------Action------------------------------------
 	
 	public Item updateArticle() {

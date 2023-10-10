@@ -19,34 +19,32 @@ import fr.jasmin.encryption.algo.EncryptionAlgorithm;
 
 @Entity
 @Table(name = "bank_card")
-@XmlRootElement
+//@XmlRootElement
 public class BankCard {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-
-	@NotEmpty
+	
 	@Column(name = "name_owner", length = 45, nullable = false)
 	private String nameOwner;
 
-	@NotEmpty
 	@Column(name = "first_name_owner", length = 45, nullable = false)
 	private String firstNameOwner;
 
-	@NotEmpty
+	
 	@Column(name = "number", length = 16, nullable = false)
 	private byte[] number;
 
 	@Transient
-	private String reelNubmer;
+	private String reelNumber;
 
-	@NotEmpty
+
 	@Column(name = "date_fin_validite", nullable = false)
 	private Date dateFinValidite;
 
-	@NotEmpty
+	
 	@Column(name = "cryptogram", length = 3, nullable = false)
 	private byte[] cryptogram;
 
@@ -61,8 +59,8 @@ public class BankCard {
 
 	}
 
-	public BankCard(@NotEmpty String nameOwner, @NotEmpty String firstNameOwner, @NotEmpty byte[] number,
-			@NotEmpty Date dateFinValidite, @NotEmpty byte[] cryptogram) {
+	public BankCard(String nameOwner, String firstNameOwner, byte[] number,
+			Date dateFinValidite, byte[] cryptogram) {
 
 		this.nameOwner = nameOwner;
 		this.firstNameOwner = firstNameOwner;
@@ -112,11 +110,11 @@ public class BankCard {
 	}
 
 	public String getReelNubmer() {
-		return reelNubmer;
+		return reelNumber;
 	}
 
 	public void setReelNubmer(String reelNubmer) {
-		this.reelNubmer = reelNubmer;
+		this.reelNumber = reelNubmer;
 	}
 
 	public byte[] getCryptogram() {

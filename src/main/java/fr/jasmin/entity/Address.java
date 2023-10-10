@@ -25,9 +25,12 @@ public class Address {
 	@Column(name = "street", length = 45, nullable = false)
 	private String street;
 
-	@Column(name = "city", length = 45)
+	@Column(name = "city", length = 45, nullable = false)
 	private String city;
 
+	@Column(name = "country", length = 45)
+	private String country;
+	
 	@Column(name = "postal_code", length = 5, nullable = false)
 	private String postalCode;
 
@@ -39,11 +42,12 @@ public class Address {
 
 	}
 
-	public Address(String number, String street, String city, String postalCode) {
+	public Address(String number, String street, String postalCode, String city, String country) {
 		this.number = number;
 		this.street = street;
-		this.city = city;
 		this.postalCode = postalCode;
+		this.city = city;
+		this.country = country;
 	}
 
 	public Integer getId() {
@@ -85,6 +89,14 @@ public class Address {
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
+	
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
 	public User getUser() {
 		return user;
@@ -96,8 +108,8 @@ public class Address {
 
 	@Override
 	public String toString() {
-		return "Address [id=" + id + ", number=" + number + ", street=" + street + ", city=" + city + ", postal_code="
-				+ postalCode + "]";
+		return "Address [id=" + id + ", number=" + number + ", street=" + street + ", city=" + city + ", country="
+				+ country + ", postalCode=" + postalCode + ", user=" + user + "]";
 	}
 
 }

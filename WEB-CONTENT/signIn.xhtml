@@ -36,7 +36,7 @@
 						</label>
 
 						<ul class="menu">
-							<li><h:commandLink action="/home">
+							<li><h:commandLink action="#{gestionarticlebean.goToHome()}">
 									<h:outputText value="Home"></h:outputText>
 								</h:commandLink></li>
 							<li><h:commandLink action="#{loginbean.enregistrer()}">
@@ -52,7 +52,7 @@
 				<h:form>
 					<div class="main-container">
 						<h1>Connection</h1>
-						<div class="row-div">
+						<div class="row-div" style="border: 0.5px solid gray; border-collapse: collapse;border-radius: 0.7rem;margin-bottom:0.2rem">
 							<h:inputText value="#{loginbean.email}" required="true"
 								a:placeholder="Email" requiredMessage="email is required"
 								id="email" class="input-text">
@@ -60,7 +60,7 @@
 							</h:inputText>
 							<h:message for="email" style="color:red" />
 						</div>
-						<div class="row-div">
+						<div class="row-div" style="border: 0.5px solid gray; border-collapse: collapse;border-radius: 0.7rem">
 							<h:inputSecret value="#{loginbean.password}" required="true"
 								a:placeholder="Password" requiredMessage="password is required"
 								id="password" class="input-text">
@@ -83,10 +83,9 @@
 						</h:panelGroup>
 
 						<div class="message">
-							<h:link value="Vous n'avez pas de compte ? Enregistrer"
+							<h:link value="Vous n'avez pas de compte ? S'inscrire"
 								outcome="#{loginbean.enregistrer()}" />
 						</div>
-
 					</div>
 				</h:form>
 			</f:view>

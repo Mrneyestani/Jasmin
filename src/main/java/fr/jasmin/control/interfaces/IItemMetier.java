@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.jasmin.entity.Category;
 import fr.jasmin.entity.Item;
+import fr.jasmin.entity.ItemCart;
 
 public interface IItemMetier {
 
@@ -38,6 +39,23 @@ public interface IItemMetier {
 	void updateArticleById(Integer id) throws Exception;
 
 	Item addArticle(Item article) throws Exception;
+	
+	ItemCart addItemCart(ItemCart itemCart) throws Exception;
+	
+	ItemCart getItemCart(Integer id) throws Exception;
+	
+	List<ItemCart> getItemCartList() throws Exception;
+	List<ItemCart> getPanierByUserId(Integer userId) throws Exception;
+	
+	void updateItemCart(ItemCart itemCart) throws Exception;
+	
+	void removeItemCartById(Integer id) throws Exception;
+	
+	void removeItemCart(ItemCart itemCart) throws Exception;
+
+	List<Category> getCategoriess() throws Exception;
+	
+	
 
 
 }

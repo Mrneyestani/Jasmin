@@ -13,7 +13,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <h:outputStylesheet library="css" name="common-style.css" />
-<h:outputStylesheet library="css" name="table-style.css" />
+<!-- <h:outputStylesheet library="css" name="table-style.css" /> -->
 <title>Jasmin_Achats</title>
 </head>
 
@@ -29,7 +29,7 @@
 							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
 						</div>
 						<div class="header-title">
-							<h1>Jasmin</h1>
+							<h2>Jasmin E-Commerce</h2>
 						</div>
 
 						<input id="menu-toggle" type="checkbox" /> <label
@@ -40,13 +40,16 @@
 						<ul class="menu">
 							<li class="user"><p>Hi
 									#{loginbean.connectedUser.firstName}</p></li>
-							<li><h:commandLink action="/panier">
-									<h:outputText value="Panier(n)"></h:outputText>
+							<li><h:commandLink
+									action="#{gestionarticlebean.voirPanier()}">
+									<h:outputText
+										value="Panier(#{gestionarticlebean.nombrePanier})"></h:outputText>
 								</h:commandLink></li>
 							<li><h:commandLink action="/historical">
 									<h:outputText value="Historical"></h:outputText>
 								</h:commandLink></li>
-							<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+							<li><h:commandLink
+									action="#{loginbean.seDeconnecter()}">
 									<h:outputText value="Sign out"></h:outputText>
 								</h:commandLink></li>
 						</ul>
@@ -58,53 +61,74 @@
 		<ui:define name="content">
 			<f:view>
 				<h:form>
-					<h1>Gestion d'achats</h1>
-					<h:form>
-						<h4>Listes des categories et articles</h4>
-						<h:selectOneMenu value="#{gestionarticlebean.categorieSelectione}"
-							onchange="submit()" required="true"
-							requiredMessage="Veuillez sélectionner une catégorie."
-							valueChangeListener="#{gestionarticlebean.setItemsByCategory}">
-							<f:selectItem itemValue="" />
-							<f:selectItems value="#{gestionarticlebean.getCategories()}" />
-						</h:selectOneMenu>
+					<div
+						style="display: flex; flex-direction: row; margin: 2rem 0rem 0rem 2rem; padding-left: 2rem">
+						<div>
+							<h3>Catégories :</h3>
+						</div>
+						<div style="margin-left: 0.5rem">
+							<h:selectOneMenu style="padding: 0.3rem; border-reduis:0.5rem"
+								value="#{gestionarticlebean.categorieId}" onchange="submit()"
+								valueChangeListener="#{gestionarticlebean.categorieChange}">
+								<f:selectItems value="#{gestionarticlebean.listCategories}"
+									var="oneCat" itemValue="#{oneCat.id}"
+									itemLabel="#{oneCat.nomCategorie}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div
+						style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; border-collapse: separate; border-spacing: 1rem; margin: 2rem; padding: 1rem; width: 70vw">
 
-						<h:dataTable id="datatable" value="#{gestionarticlebean.listArticles}"
-							rendered="#{gestionarticlebean.isDataTableRendred()}" var="i"
-							styleClass="order-table" headerClass="order-table-header"
-							rowClasses="order-table-odd-row, order-table-even-row">
+						<c:forEach items="#{gestionarticlebean.categorieSelectione.items}"
+							var="currentItem">
 
-							<h:column>
-								<f:facet name="header">Nom Article</f:facet>
-								<h:outputText value="#{i.name}" />
-							</h:column>
-
-							<h:column>
-								<f:facet name="header">Prix</f:facet>
-								<h:outputText value="#{i.prix}" />
-							</h:column>
-
-							<h:column>
-								<f:facet name="header">Quantité</f:facet>
-								<h:inputText value="#{i.quantite}" size="1"
-									style="text-align:center" maxlength="1"></h:inputText>
-							</h:column>
-
-							<h:column>
-								<f:facet name="header">Sélection</f:facet>
-								<h:selectBooleanCheckbox value="#{i.isChecked}"></h:selectBooleanCheckbox>
-							</h:column>
-						</h:dataTable>
-
-						<p></p>
-						<h:commandButton type="submit" id="ajouterPanier"
-							value="Ajouter Panier"
-							action="#{gestionarticlebean.addArticlesToPanier()}" />
-
-						<h:commandButton id="validerPanier" value="Valider Panier"
-							action="#{gestionarticlebean.validerPanier()}" />
-						<br></br>
-					</h:form>
+							<h:outputStylesheet library="css" name="common-style.css" />
+							<div
+								style="align-content: center; align-items: center; font-size: 1rem; margin: 0.3rem">
+								<div
+									style="align-content: center; align-items: center; justify-content: center">
+									<h:commandLink
+										action="#{gestionarticlebean.goToPageAchatUnArticle()}">
+										<f:setPropertyActionListener
+											target="#{gestionarticlebean.articleActuel}"
+											value="#{currentItem}" />
+										<h:graphicImage id="jpgImg" library="images"
+											name="#{currentItem.photos}" width="200" height="265"
+											class="article" />
+									</h:commandLink>
+								</div>
+								<div class="article" style="width: 250px">
+									<h:commandLink
+										action="#{gestionarticlebean.goToPageAchatUnArticle()}">
+										<f:setPropertyActionListener
+											target="#{gestionarticlebean.articleActuel}"
+											value="#{currentItem}" />
+										<h:outputText
+											value="#{currentItem.name},#{currentItem.description}"
+											style="color: black" />
+									</h:commandLink>
+								</div>
+								<div class="article">
+									<h:outputText value="#{currentItem.remise}% de réduction" />
+								</div>
+								<div class="article">
+									<h:outputText
+										value="#{currentItem.stock} exemplaire(s) en stock " />
+								</div>
+								<div class="article" style="font-size: 1rem; font-weight: bold">
+									<h:outputText value="#{currentItem.prix}€" />
+								</div>
+								<div>
+									<h:commandLink value="Ajouter au panier" style="color:green"
+										action="#{gestionarticlebean.addArticlesToPanier()}">
+										<f:setPropertyActionListener
+											target="#{gestionarticlebean.articleActuel}"
+											value="#{currentItem}" />
+									</h:commandLink>
+								</div>
+							</div>
+						</c:forEach>
+					</div>
 				</h:form>
 			</f:view>
 		</ui:define>
