@@ -12,7 +12,6 @@ import fr.jasmin.utils.Dates;
 public class AddUser {
 
 	public static void main(String[] args) {
-		// test add ok (user ,list address , list bankCard )
 
 		try {
 			System.out.println("***********************début de test**********************");
@@ -63,7 +62,6 @@ public class AddUser {
 			user.getBankCardList().forEach(bk -> System.out.println("  -> " + bk));
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

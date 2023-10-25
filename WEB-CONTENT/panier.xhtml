@@ -31,25 +31,27 @@
 						<div class="header-title">
 							<h1>Jasmin</h1>
 						</div>
-						<input id="menu-toggle" type="checkbox" /> <label
-							class="menu-button-container" for="menu-toggle">
-							<div class="menu-button"></div>
-						</label>
+						<div style="padding: 1rem">
+							<input id="menu-toggle" type="checkbox" /> <label
+								class="menu-button-container" for="menu-toggle">
+								<div class="menu-button"></div>
+							</label>
 
-						<ul class="menu">
-							<li class="user"><p>Hi
-									#{loginbean.connectedUser.firstName}</p></li>
-							<li><h:commandLink action="/gestion_achats.xhtml">
-									<h:outputText value="Home"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink action="/historical">
-									<h:outputText value="Historical"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink
-									action="#{gestionarticlebean.seDeconnecter()}">
-									<h:outputText value="Sign out"></h:outputText>
-								</h:commandLink></li>
-						</ul>
+							<ul class="menu">
+								<li class="user"><p>Hi
+										#{loginbean.connectedUser.firstName}</p></li>
+								<li><h:commandLink action="/gestion_achats.xhtml">
+										<h:outputText value="Home"></h:outputText>
+									</h:commandLink></li>
+								<li><h:commandLink action="/historical">
+										<h:outputText value="Historical"></h:outputText>
+									</h:commandLink></li>
+								<li><h:commandLink
+										action="#{gestionarticlebean.seDeconnecter()}">
+										<h:outputText value="Sign out"></h:outputText>
+									</h:commandLink></li>
+							</ul>
+						</div>
 					</div>
 				</h:form>
 			</f:view>

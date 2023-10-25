@@ -14,7 +14,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <h:outputStylesheet library="css" name="common-style.css" />
-<!-- <h:outputStylesheet library="css" name="table-style.css" /> -->
 <title>Jasmin_Home</title>
 </head>
 
@@ -32,25 +31,25 @@
 						<div class="header-title">
 							<h2>Bienvenu au Jasmin E-Commerce</h2>
 						</div>
+						<div style="padding:1rem">
+							<input id="menu-toggle" type="checkbox" /> <label
+								class="menu-button-container" for="menu-toggle">
+								<div class="menu-button"></div>
+							</label>
 
-						<input id="menu-toggle" type="checkbox" /> <label
-							class="menu-button-container" for="menu-toggle">
-							<div class="menu-button"></div>
-						</label>
-
-						<ul class="menu">
-							<li class="user"><p>Hi
-									#{loginbean.connectedUser.firstName}</p></li>
-							<li><h:commandLink
-									action="#{gestionarticlebean.goToHome()}">
-									<h:outputText
-										value="Panier(#{gestionarticlebean.panierUpdate().size()})"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink
-									action="#{loginbean.seDeconnecter()}">
-									<h:outputText value="Sign in"></h:outputText>
-								</h:commandLink></li>
-						</ul>
+							<ul class="menu">
+								<li class="user"><p>Hi
+										#{loginbean.connectedUser.firstName}</p></li>
+								<li><h:commandLink
+										action="#{gestionarticlebean.goToHome()}">
+										<h:outputText
+											value="Panier(#{gestionarticlebean.panierUpdate().size()})"></h:outputText>
+									</h:commandLink></li>
+								<li><h:commandLink action="#{loginbean.seDeconnecter()}">
+										<h:outputText value="Sign in"></h:outputText>
+									</h:commandLink></li>
+							</ul>
+						</div>
 					</div>
 				</h:form>
 			</f:view>
@@ -113,7 +112,7 @@
 									<h:outputText
 										value="#{currentItem.stock} exemplaire(s) en stock " />
 								</div>
-									<div class="article" style="font-size: 1rem; font-weight: bold">
+								<div class="article" style="font-size: 1rem; font-weight: bold">
 									<h:outputText value="#{currentItem.prix}€" />
 								</div>
 								<div>

@@ -1,8 +1,3 @@
-/**
- * ExecutePaymentServlet class - execute payment via PayPal.
- * @author Nam Ha Minh
- * @copyright https://codeJava.net
- */
 package fr.jasmin.servelet;
 
 import java.io.IOException;

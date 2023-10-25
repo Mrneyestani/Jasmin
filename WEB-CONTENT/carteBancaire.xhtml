@@ -30,26 +30,27 @@
 						<div class="header-title">
 							<h1>Jasmin</h1>
 						</div>
+						<div style="padding: 1rem">
+							<input id="menu-toggle" type="checkbox" /> <label
+								class="menu-button-container menu-button" for="menu-toggle">
+							</label>
 
-						<input id="menu-toggle" type="checkbox" /> <label
-							class="menu-button-container menu-button" for="menu-toggle">
-						</label>
-
-						<ul class="menu">
-							<li class="user"><p>Hi
-									#{loginbean.connectedUser.firstName}</p></li>
-							<li><h:commandLink action="/panier">
-									<h:outputText
-										value="Panier(#{gestionarticlebean.nombrePanier})"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink action="/historical">
-									<h:outputText value="Historical"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink
-									action="#{gestionarticlebean.seDeconnecter()}">
-									<h:outputText value="Sign out"></h:outputText>
-								</h:commandLink></li>
-						</ul>
+							<ul class="menu">
+								<li class="user"><p>Hi
+										#{loginbean.connectedUser.firstName}</p></li>
+								<li><h:commandLink action="/panier">
+										<h:outputText
+											value="Panier(#{gestionarticlebean.nombrePanier})"></h:outputText>
+									</h:commandLink></li>
+								<li><h:commandLink action="/historical">
+										<h:outputText value="Historical"></h:outputText>
+									</h:commandLink></li>
+								<li><h:commandLink
+										action="#{gestionarticlebean.seDeconnecter()}">
+										<h:outputText value="Sign out"></h:outputText>
+									</h:commandLink></li>
+							</ul>
+						</div>
 					</div>
 				</h:form>
 			</f:view>
@@ -126,11 +127,9 @@
 							<h:outputText value="#{userbean.messageError}" style="color:red"></h:outputText>
 						</h:panelGrid>
 					</h:panelGroup>
-
 				</h:form>
 			</f:view>
 		</ui:define>
-
 	</ui:composition>
 </body>
 </html>

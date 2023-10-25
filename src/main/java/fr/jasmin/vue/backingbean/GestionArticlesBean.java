@@ -42,10 +42,7 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	private static final long serialVersionUID = 1L;
 
 	private final IItemMetier itemMetier = new ItemMetier();
-	private final IUserMetier userMetier = new UserMetier();
 	private final ICategoryDao categoryDao = new CategoryDao();
-	private final IItemDao itemDao = new ItemDao();
-	private final IItemCartDao itemCartDao = new ItemCartDao();
 
 	/// ***********************Attributs_article**************************
 
@@ -89,7 +86,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	private List<String> listItemQuantite;
 	private String itemQiantite;
 	private Integer nombrePanier;
-//	private Integer remiseTotal;
 	private Float prixTotal;
 	private Float livraison;
 	private Float prixTotalGeneral;
@@ -105,7 +101,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	private String messageError;
 	private Boolean isDataTableRendred;
 	private HashMap<Integer, Integer> mapQuantites = new HashMap<Integer, Integer>();
-//	private LoginBean loginBean = new LoginBean();
 
 	/// ***********************Order details**************************
 	private String product;
@@ -113,30 +108,15 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	private String shipping;
 	private String tax;
 	private String total;
-	private String codePaypalButton;
 
 	/// ***********************Constructeurs**************************
 
-//	 @PostConstruct
-//	    public void init() {
-//	        // Récupérez ici le code HTML généré par PayPal et stockez-le dans codePaypalButton
-//	        codePaypalButton = "<!-- Code HTML généré par PayPal -->";
-//	    }
-//
-//	    public String getCodePaypalButton() {
-//	        return codePaypalButton;
-//	    }
-	
 	public GestionArticlesBean() {
 		messageSuccess = "";
 		messageError = "";
 		isDataTableRendred = false;
 		setLivraison(0f);
-//		quantite = 1;
 		categorieSelectione = new Category();
-		// quantite = 1;
-//		isChecked = false;
-//		articles = new ArrayList<Item>();
 
 		if (this.getListCategories() == null || this.getListCategories().isEmpty()) {
 			this.setListCategories(new ArrayList<Category>());
@@ -152,26 +132,10 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 		try {
 			this.listCategories = itemMetier.getCategoriess();
-//			getPanierByUserId();
-//			nombrePanier = (getPanier().size()!= 0) ? nombrePanier : 0;
 			if (LoginBean.connectedUser != null) {
 			
 			getPanierByUserId();
-//			setPanier(getPanierByUserId());
-//			this.nombrePanier=getPanier().size();
 			updateTotalPrix();
-//			this.setPanier(itemMetier.getPanierByUserId(LoginBean.connectedUser.getId()));
-//			this.setNombrePanier(this.getPanier().size());
-			Utils.trace("panier au demarage1  : %s\n", getPanier());
-			Utils.trace("nombre panier au demarage  : %s\n", this.nombrePanier);
-			Utils.trace("category Actuel au demarage  : %s\n", this.getCategorieActuel());
-			Utils.trace("size de liste categories au demarage  : %s\n", this.listCategories.size());
-//			} else {
-//			setPanier(null);
-//			this.setNombrePanier(0);
-//			}
-//			}
-//			this.articles = itemDao.getArticles();
 			}
 			setPanier(null);
 			
@@ -183,21 +147,11 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 																					// premier de la liste
 			this.setCategorieId(this.getCategorieActuel().getId());
 
-//			this.setCategorieId(this.listCategories.get(0).getId());
-//			this.categorieActuel = this.listCategories.get(0);
-//			this.categorieActuel.getItems();
-//			this.categorieSelectione.setId(this.categorieActuel.getId());
-//			this.categorieSelectione.setIsRemiseCumulable(this.categorieActuel.getIsRemiseCumulable());
-//			this.categorieSelectione.setNomCategorie(this.categorieActuel.getNomCategorie());
-//			this.categorieSelectione.setPhotoCategorie(this.categorieActuel.getPhotoCategorie());
-//			this.categorieSelectione.setRemiseCategorie(this.categorieActuel.getRemiseCategorie());
 			for (Item item : this.getCategorieActuel().getItems()) {
 				if (item.getIsVendable()) {
 					this.categorieSelectione.getItems().add(item);
 				}
 			}
-//			Utils.trace("categorySelection  : %s\n", this.categorieSelectione.getItems());
-//			this.categorieSelectione.getItems();
 
 		} else if (this.listCategories.size() > 0 && this.getCategorieActuel() == null) {
 
@@ -211,34 +165,20 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			}
 
 		} else {
-//			this.setCategorieId(1);
 			this.categorieActuel = new Category(); // liste vide
-//			this.categorieSelectione = new Category();
-//			this.articleActuel = new Item();
 		}
-
-		
-//		this.setCategorieId(5);								// liste vide
-//		this.setCurrentCategorie( this.getCategorieList()
-//									.get(this.getCategorieId()));
-
 	}
 
 	// ------------------------------------action---------------------------------------------
 	public String seDeconnecter() throws Exception {
 
 		try {
-//			UserBean userBean = new UserBean();
 			 ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 			 HttpSession session = (HttpSession) externalContext.getSession(false);
 			 if (session != null) {
 		            // Invalider la session
 		            session.invalidate();
 		        }
-//			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-//			this.setNombrePanier(0);
-//			this.setPanier(null);
-//			userBean.setConnectedUser(getUserActuel());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -246,56 +186,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		return "/signIn.xhtml?faces-redirect=true";
 
 	}
-	// ------------------------------------action---------------------------------------------
-
-//	public String quantiteChange(ValueChangeEvent e) {
-//		this.quantite=1;
-//		quantiteMax=0;
-//		panierModifie = new ArrayList<ItemCart>();
-//		itemCartSelected = new ItemCart();
-//		listItemQuantite = new ArrayList<String>();
-//		
-//
-//		this.quantiteMax =(int)e.getNewValue();
-//		Utils.trace("QuentitéMAx au depart  : %s\n", getQuantiteMax());
-//		try {
-//			if (this.getPanierModifie()== null || this.getPanierModifie().isEmpty()) {
-//			panierModifie = new ArrayList<ItemCart>();
-//			}
-//			if(this.getPanierModifie().size() > 0) {
-//				
-//				this.setItemCartSelected(this.getPanierModifie().get(0));
-//			}
-//			getItemCartSelected().setQuantite(getQuantiteMax());
-//			Utils.trace("ItemCart selected  : %s\n", getItemCartSelected());
-//			itemMetier.updateItemCart(getItemCartSelected());
-//			panierUpdate();
-//			updateTotalPrix();
-//			for (ItemCart itemCart : getPanier()) {
-
-//				setQuantiteMax(itemCart.getItem().getStock());
-//				getListItemQuantite();
-
-//				if(e.getNewValue().equals(itemCart.getQuantite())!=true && itemCart.getIsChecked()==true) {
-//				Utils.trace("Id de Item qui est changé  : %s\n", itemCart.getId());
-//				Utils.trace("Ancienne Quentité : %s\n", itemCart.getQuantite());
-//				this.setQuantite((int) e.getNewValue());
-//				itemCart.setQuantite((int)e.getNewValue());
-//				
-//				Utils.trace("Nouvelle changé  : %s\n", itemCart.getQuantite());
-//				}
-//				updateTotalPrix();
-//				System.out.println("===== La quantité est changée =====");
-//			}
-
-//		} catch (Exception exception) {
-//			messageSuccess = "";
-//			messageError = "Erreur lors de la récupération de la quantité !\n" + exception.getMessage();
-//			exception.printStackTrace();
-//
-//		}
-//		return "";
-//	}
 	// ------------------------------------action---------------------------------------------
 
 	public String categorieChange(ValueChangeEvent e) {
@@ -310,15 +200,8 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		try {
 			this.setCategorieActuel(itemMetier.getCategory(this.getCategorieId()));
 			Utils.trace("Les Items de categorie actuel  : %s\n", this.getCategorieActuel().getItems());
-//			this.categorieActuel.getItems();
-//			this.categorieSelectione.setId(this.categorieActuel.getId());
-//			this.categorieSelectione.setIsRemiseCumulable(this.categorieActuel.getIsRemiseCumulable());
-//			this.categorieSelectione.setNomCategorie(this.categorieActuel.getNomCategorie());
-//			this.categorieSelectione.setPhotoCategorie(this.categorieActuel.getPhotoCategorie());
-//			this.categorieSelectione.setRemiseCategorie(this.categorieActuel.getRemiseCategorie());
 			for (Item item : this.categorieActuel.getItems()) {
 				if (item.getIsVendable()) {
-//					item.setCategory(this.categorieSelectione);
 					this.categorieSelectione.getItems().add(item);
 				}
 			}
@@ -349,11 +232,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			categorieActuel.setIsRemiseCumulable(this.isRemiseCumulable);
 			categorieActuel.setPhotoCategorie(this.photoCategorie);
 
-//			for (Item item : getListArticlesCategorieActuel()) {
-//				item.setCategory(categorieActuel);
-//				categorieActuel.getItems().add(item);
-//			}
-
 			itemMetier.addCategory(categorieActuel);
 			listCategories = categoryDao.getCategoriess();
 			categorieId = categorieActuel.getId();
@@ -369,7 +247,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			return null;
 		}
 
-//		getListArticles().clear();
 		initialiseArticle();
 		initialiseCategorie();
 
@@ -428,7 +305,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			category.getItems().forEach(a -> System.out.println("  -> " + a));
 
 		}
-
 		return "";
 	}
 
@@ -470,21 +346,13 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 	public String selectCategorieActuel() {
 
-//		Category categoryUpdate = new Category();
-
 		try {
-//			categoryUpdate = getCategorieActuel();
 			Utils.trace("categorie selectioné  : %s\n", getCategorieActuel());
 			this.setNomCategorie(getCategorieActuel().getNomCategorie());
 			this.setRemiseCategorie(getCategorieActuel().getRemiseCategorie());
 			this.setIsRemiseCumulable(getCategorieActuel().getIsRemiseCumulable());
 			this.setPhotoCategorie(getCategorieActuel().getPhotoCategorie());
 			this.setIdCategorie(getCategorieActuel().getId());
-
-//			for (Item item : getListArticlesCategorieActuel()) {
-//				item.setCategory(getCategorieActuel());
-//				getCategorieActuel().getItems().add(item);
-//			}
 
 			messageSuccess = "Categorie actuel a été séléctioné.";
 			messageError = "";
@@ -501,31 +369,19 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 	public String updateCategorieSelected() {
 
-//		Category categoryModified = new Category();
-
 		try {
 			Utils.trace("Categorie avant mis à jour  : %s\n", getCategorieActuel());
-//			categoryModified = this.getCategorieActuel();
 			getCategorieActuel().setNomCategorie(this.nomCategorie);
 			Utils.trace("nomCategory  : %s\n", nomCategorie);
 			getCategorieActuel().setRemiseCategorie(this.remiseCategorie);
 			getCategorieActuel().setIsRemiseCumulable(this.isRemiseCumulable);
 			getCategorieActuel().setPhotoCategorie(this.photoCategorie);
 
-//			for (Item item : getListArticlesCategorieActuel()) {
-//				item.setCategory(getCategorieActuel());
-//				getCategorieActuel().getItems().add(item);
-//			}
-
 			itemMetier.updateCategory(getCategorieActuel());
 			listCategories = categoryDao.getCategoriess();
 			this.setCategorieId(getCategorieActuel().getId());
-//			setCategorieActuel(categoryModified);
-//			listArticlesCategorieActuel = categoryModified.getItems();
 			messageSuccess = "Categorie actuel a été mis à jour avec succès.";
 			messageError = "";
-
-//			getListArticles().clear();
 
 		} catch (Exception e) {
 			messageSuccess = "";
@@ -563,11 +419,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 				this.categorieActuel = new Category();
 			}
 
-//			for (Item item : ArticleBean.getListItem()) {
-//				item.setCategory(currentCategorie);
-//				currentCategorie.getItems().add(null);
-//			}
-
 		} catch (Exception e) {
 			messageSuccess = "";
 			messageError = "Erreur lors de la suppression de categorie : " + getCategorieActuel().getNomCategorie()
@@ -595,13 +446,8 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 			getCategorieActuel().getItems().add(articleActuel);
 
-//		listArticlesCategorieActuel.add(articleActuel);
-
-			Utils.trace("Categorie Actuel  : %s\n", getCategorieActuel());
 			itemMetier.addArticle(getArticleActuel());
 
-			Utils.trace("article ajouté  : %s\n", getArticleActuel());
-//			setListArticlesCategorieActuel(getCategorieActuel().getItems());
 			messageSuccess = "Article : " + nomArticle + " a été ajouté avec succès. Voici les details : ";
 			messageError = "";
 
@@ -621,18 +467,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 	public String selectArticleActuel() {
 
-//		this.articleActuel = new Item();
-////		   CategorieBean categorieBean = new CategorieBean();
-//		   Utils.trace("CurrentCategorie  : %s\n", categorieBean.getCurrentCategorie());
-//		   setItemList(categorieBean.getCurrentCategorie().getItems());
-
-//		for (Item item : this.getListArticles()) {
-
-//			if (item.getId() == this.getArticleId()) {
-//				this.setArticleActuel(item);
-//			}
-//		}
-
 		try {
 			if (LoginBean.connectedUser == null) {
 				setPanier(null);
@@ -640,7 +474,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			Utils.trace("itemId  : %s\n", getArticleId());
 			Utils.trace("itemId  : %s\n", this.articleActuel);
 			selectCategorieActuel();
-//			this.setArticleActuel(itemMetier.getArticle(this.getArticleId()));
 			this.setNomArticle(getArticleActuel().getName());
 			this.setDescription(getArticleActuel().getDescription());
 			Utils.trace("photo article actuel : %s\n", getArticleActuel().getPhotos());
@@ -650,8 +483,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			this.setPrix(getArticleActuel().getPrix());
 			this.setStock(getArticleActuel().getStock());
 			this.setIsVendable(getArticleActuel().getIsVendable());
-
-//			itemList.add(item);
 
 			messageSuccess = "l'Article actuel a été selectioné avec succès.";
 			messageError = "";
@@ -670,16 +501,7 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	// ------------------------------------action---------------------------------------------
 
 	public String updateArticleSelected() {
-//		Item itemModified = new Item();
 
-		Utils.trace("Article avant mis à jour  : %s\n", getArticleActuel());
-//			item = itemMetier.getArticle(getId());
-//			Utils.trace("Id  : %s\n", this.getIdArticle());
-//			itemModified = itemMetier.getArticle(this.getIdArticle());
-//			itemModified = this.getCurrentItem();
-//			Utils.trace("Id  : %s\n", this.getId());
-//			Utils.trace("Id  : %s\n", this.getCurrentItem());
-//			Utils.trace("currentItem  : %s\n", this.currentItem);
 		getArticleActuel().setName(this.nomArticle);
 		getArticleActuel().setDescription(this.description);
 		getArticleActuel().setPhotos(photosArticle);
@@ -689,15 +511,10 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		getArticleActuel().setStock(this.stock);
 		getArticleActuel().setIsVendable(this.isVendable);
 
-//			getCategorieActuel().getItems().add(getArticleActuel());
-
 		try {
 
 			itemMetier.updateArticle(getArticleActuel());
 			setCategorieActuel(getArticleActuel().getCategory());
-
-//			listArticles = itemDao.getArticles();
-//			CategorieBean.currentCategorie.getItems();
 
 			messageSuccess = "Article a été mis à jour avec succès.";
 			messageError = "";
@@ -722,7 +539,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		try {
 			Utils.trace("Article Actuel : %s\n", getArticleActuel());
 			itemMetier.removeArticle(getArticleActuel());
-//		itemList = itemDao.getArticles();
 			listCategories = categoryDao.getCategoriess();
 			setCategorieActuel(categoryDao.getCategoryByNom(getCategorieActuel().getNomCategorie()));
 			setCategorieId(getCategorieActuel().getId());
@@ -769,9 +585,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		itemCartActuel = new ItemCart();
 		try {
 
-//			for (Item item : listArticles) {
-//				if (item.getIsChecked() == true) {
-			// mapQuantites.put(item.getId(), item.getQuantite());
 			if (LoginBean.connectedUser==null&& getPanier()==null){
 				
 				return loginBean.seDeconnecter();
@@ -783,24 +596,12 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			Utils.trace("itemId  : %s\n", getArticleActuel().getId());
 			itemCartActuel.setItem(getArticleActuel());
 			itemCartActuel.setQuantite(this.getQuantite());
-//			itemCartActuel.setIsChecked(false);
 			Utils.trace("itemId  : %s\n", itemCartActuel);
 			itemMetier.addItemCart(itemCartActuel);
 			getPanierByUserId();
-//			this.panier = getPanierByUserId();
-//			this.setNombrePanier(getPanier().size());
-
-//			Utils.trace("Panier  : %s\n", getPanier());
-//			Utils.trace("nombrePanier  : %s\n", nombrePanier);
-//			Utils.trace("Quentité  : %s\n", itemCartActuel.getQuantite());
-//			Utils.trace("IsChecked  : %s\n", itemCartActuel.getIsChecked());
 
 			messageSuccess = "l'Article : " + getArticleActuel().getName() + " a été ajouté au panier avec succès.";
 			messageError = "";
-			
-			
-			
-//			userMetier.addPanier(getPanier());
 
 		} catch (Exception e) {
 			messageSuccess = "";
@@ -808,7 +609,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 					+ e.getMessage();
 			e.printStackTrace();
 		}
-//		Utils.trace("ItemCart  : %s\n", itemCartActuel);
 		initialiseIscheckedQuentite();
 		return "";
 	}
@@ -823,7 +623,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			}
 			getPanierByUserId();
 			this.setNombrePanier(getPanier().size());
-//			this.setIsChecked(false);
 			messageSuccess = "";
 			messageError = "";
 
@@ -843,11 +642,8 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 		try {
 			
-//			if (LoginBean.connectedUser != null) {
 			this.setPanier(itemMetier.getPanierByUserId(LoginBean.connectedUser.getId()));
 			this.setNombrePanier(this.getPanier().size());
-//			this.panier = itemMetier.getPanierByUserId(LoginBean.connectedUser.getId());
-//			this.nombrePanier = this.panier.size();
 			messageSuccess = "";
 			messageError = "";
 //			}
@@ -864,7 +660,14 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 	public Integer nombreArticleCommand() {
 		
-		Integer nombreArticleCommand = getPanierModifie().size();
+		Integer nombreArticleCommand = 0;
+		
+		for (ItemCart itemCart : getPanierModifie()) {
+
+		nombreArticleCommand += itemCart.getQuantite();
+		
+		}
+		
 		return nombreArticleCommand;
 
 	}
@@ -892,15 +695,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 			}
 		panierSelected();
 		getPanierModifie();
-//			panierModifie = new ArrayList<ItemCart>();
-//			for (ItemCart itemCart: getPanierByUser()) {
-//				
-//				if(itemCart.getIsChecked()==true) {
-//					
-//					getPanierModifie().add(itemCart);
-//					
-//				}
-//			}
 		messageSuccess = "Panier a été mis à jour avec succès.";
 		messageError = "";
 		return "/command.xhtml";
@@ -912,23 +706,13 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	public List<ItemCart> panierSelected() {
 		panierModifie = new ArrayList<ItemCart>();
 		try {
-//				Utils.trace("FirstPanier  : %s\n", getPanier().get(0));
 			for (ItemCart itemCart : getPanier()) {
 
 				if (itemCart.getIsChecked()) {
-//					itemCart.setQuantite(getQuantite());
 					this.panierModifie.add(itemCart);
-//						Utils.trace("Panier modifie  : %s\n",panierModifie );
-					// for update panier on utilise le code ci-dessous
-//						itemMetier.updateItemCart(itemCart);
 				}
 
 			}
-//				nombrePanier = getPanierModifie().size();
-//				Utils.trace("Panier Modifié : %s\n", getPanierModifie());
-
-//				this.panier = getPanierByUser();
-//				nombrePanier = getPanier().size();
 
 			messageSuccess = "Panier a été séléctioné avec succès.";
 			messageError = "";
@@ -946,22 +730,15 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 	public List<ItemCart> panierUpdate() {
 		panierModifie = new ArrayList<ItemCart>();
-//		quantite = 0;
 		try {
-//				Utils.trace("FirstPanier  : %s\n", getPanier().get(0));
 			if ( getPanier()== null) {
 				return null;
 			}
 			Utils.trace("getPanier  : %s\n",getPanier() );
 			for (ItemCart itemCart : getPanier()) {
-//				Utils.trace("Quantité de itemCart dans le boucle for  : %s\n", itemCart.getQuantite());
 				if (itemCart.getQuantite() <= itemCart.getItem().getStock()) {
 
-//					itemCart.setQuantite(getQuantite());
-//					quantite += itemCart.getQuantite();
 					this.panierModifie.add(itemCart);
-//						Utils.trace("Panier modifie  : %s\n",panierModifie );
-					// for update panier on utilise le code ci-dessous
 					itemMetier.updateItemCart(itemCart);
 				}
 
@@ -970,15 +747,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 						+ " ,veuillez choisir une quantité inferieur ou égale à "+ itemCart.getItem().getStock();
 				messageSuccess = "";
 			
-//				nombrePanier = getPanierModifie().size();
-//				Utils.trace("Panier Modifié : %s\n", getPanierModifie());
-
-//				this.panier = getPanierByUser();
-//				nombrePanier = getPanier().size();
-
-//			messageSuccess = "Panier a été mise à jour avec succès.";
-//			messageError = "";
-
 			}
 			
 		} catch (Exception e) {
@@ -999,30 +767,22 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 		try {
 			if (getPanier() != null) {
-//				
-//				return "";
-//			}
 			System.out.println("===== Checked/unCheked =====");
 			
 			panierUpdate();
-//			Utils.trace("panier : %s\n", panierUpdate());
 			Utils.trace("panier : %s\n", getPanier());
 			
 			for (ItemCart itemCart : getPanier()) {
 
 				if (itemCart.getIsChecked() && itemCart.getQuantite() <= itemCart.getItem().getStock() ) {
 
-//					itemCart.setQuantite(getQuantite());
 					this.panierSelected.add(itemCart);
-//						Utils.trace("Panier modifie  : %s\n",panierModifie );
-					// for update panier on utilise le code ci-dessous
 						itemMetier.updateItemCart(itemCart);
 				}
 
 			}
 			if (panierSelected != null) {
 
-//				getPanierModifie();
 				Utils.trace("panier : %s\n", getPanier());
 				Utils.trace("panier modifie : %s\n", getPanierModifie());
 				Utils.trace("panier selected : %s\n", getPanierSelected());
@@ -1085,16 +845,10 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	// ------------------------------------action---------------------------------------------
 
 	public Float calculPrixTotal() {
-//			OrderDetail orederDetail = new OrderDetail();
-//			setShipping("10.0");
-//			setTax("10.0");
-		
-			
 		
 		prixTotal = 0f;
 
 		for (ItemCart itemCart : getPanierSelected()) {
-//			itemCart.setQuantite(getQuantite());
 			prixTotal += itemCart.getPrixTotalArticle();
 		}
 		
@@ -1105,9 +859,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	// ------------------------------------action---------------------------------------------
 
 	public Float calculPrixTotalAvecLivraison() {
-//			OrderDetail orederDetail = new OrderDetail();
-//			setShipping("10.0");
-//			setTax("10.0");
 		prixTotalGeneral = 0.0f;
 		prixTotalGeneral = calculPrixTotal() + calculLivraison();
 
@@ -1123,7 +874,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 			itemMetier.removeItemCartById(getItemCartSelected().getId());
 			getPanierByUserId();
-//				panier = itemMetier.getItemCartList();
 			nombrePanier = getPanier().size();
 
 			messageSuccess = "l'itemCart a été supprimé avec succès.";
@@ -1154,53 +904,8 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	}
 
 //------------------------------------action---------------------------------------------
-	public String submitForm() throws IOException {
-
-//		OrderDetail orderDetail = new OrderDetail();
-//		orderDetail.setProduct("Sumsung S21");
-//		orderDetail.setSubtotal(130.0f);
-//		orderDetail.setShipping(10.0f);
-//		orderDetail.setTax(10.0f);
-//		orderDetail.setTotal(150.0f);
-
-//		sendDataToServlet("product", "Sumsung S21");
-//		sendDataToServlet("subtotal", "130.0");
-//		sendDataToServlet("shipping", "10.0");
-//		sendDataToServlet("tax", "10.0");
-//		sendDataToServlet("total", "150.0");
-//		 
-
-//		String approvalLink = null;
-//		try {
-//			PaymentServices paymentServices = new PaymentServices();
-//			approvalLink = paymentServices.authorizePayment(orderDetail);
-//		} catch (PayPalRESTException e) {
-//			
-//			e.printStackTrace();
-//		}
-		return "";
-
-	}
-//------------------------------------action---------------------------------------------
 
 	public String payer() throws PayPalRESTException {
-
-//		AuthorizePaymentServlet authorizePaymentServlet = new AuthorizePaymentServlet();
-//		AuthorizePaymentServlet();
-		// authorizePaymentServlet.doPost(HttpServletRequest request,
-		// HttpServletResponse response);
-
-//		try {
-//			PaymentServices paymentServices = new PaymentServices();
-//			String approvalLink = paymentServices.authorizePayment();
-
-//			response.sendRedirect(approvalLink);
-
-//		} catch (PayPalRESTException ex) {
-//			request.setAttribute("errorMessage", ex.getMessage());
-//			ex.printStackTrace();
-//			request.getRequestDispatcher("error.jsp").forward(request, response);
-//		}
 
 		return "/authorize_payment";
 	}
@@ -1208,13 +913,9 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 //===========================================================	
 	public String goToHome() throws Exception {
 		
-//		LoginBean loginBean = new LoginBean();
-//		loginBean.seDeconnecter();
 		initialiseUserPanier();
-		
 		messageSuccess = "";
 		messageError = "";
-
 		return "home.xhtml";
 	}
 //===========================================================	
@@ -1265,7 +966,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 		this.remiseArticle = null;
 		this.prix = null;
 		this.stock = null;
-
 		this.isVendable = true;
 
 	}
@@ -1304,8 +1004,6 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 		return "gestion_articles.xhtml";
 	}
-	// ---------------------------------------------------------------------------------
-
 	// ------------------------------------getters/setters---------------------------------------------
 
 	public Integer getIdArticle() {
@@ -1678,21 +1376,13 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 
 	public List<String> getListItemQuantite() {
 		listItemQuantite = new ArrayList<String>();
-//		listItemQuantites = new ArrayList<String>();
-//		for (ItemCart itemCart : getPanier()) {
-//			setQuantiteMax(itemCart.getItem().getStock());
-//		if (getQuantiteMax()>=10) {
-//			setQuantiteMax(10);
-//		}
 
 		for (Integer i = 1; i <= 10; i++) {
 
 			listItemQuantite.add(i.toString());
 		}
-//		listItemQuantites.addAll(listItemQuantite);
 		return listItemQuantite;
 	}
-//	}
 
 	public void setListItemQuantite(List<String> listItemQuantite) {
 		this.listItemQuantite = listItemQuantite;
@@ -1729,32 +1419,4 @@ public class GestionArticlesBean extends MasterBean implements IConstant, Serial
 	public void setLivraison(Float livraison) {
 		this.livraison = livraison;
 	}
-
-//	public Integer getRemiseTotal() {
-//		
-//		if (getItemCartActuel().getItem().getCategory().getIsRemiseCumulable()) {
-//			
-//			remiseTotal = getItemCartActuel().getItem().getRemise() + getItemCartActuel().getItem().getCategory().getRemiseCategorie();
-//		}else {
-//		
-//		remiseTotal = getItemCartActuel().getItem().getRemise();
-//		
-//		}
-//		
-//		return remiseTotal;
-//	}
-//
-//	public void setRemiseTotal(Integer remiseTotal) {
-//		this.remiseTotal = remiseTotal;
-//	}
-//
-//	public Float getPrixTotal() {
-//		prixTotal  = getItemCartActuel().getQuantite()*(getItemCartActuel().getItem().getPrix() - getItemCartActuel().getItem().getPrix()*getRemiseTotal()/100);
-//		return prixTotal;
-//	}
-//
-//	public void setPrixTotal(Float prixTotal) {
-//		this.prixTotal = prixTotal;
-//	}
-
 }

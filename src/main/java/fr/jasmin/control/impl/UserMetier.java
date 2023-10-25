@@ -24,12 +24,6 @@ public class UserMetier implements IUserMetier {
 		// cryptage du password et ajouter le mot de passe crypté dans le user
 		user.setPassword(EncryptionAlgorithm.encrypt(password));
 
-//		List<BankCard> bankCardList = user.getBankCardList();
-//		for (BankCard bk : bankCardList) {
-//			bk.encryptCryptogram();
-//			bk.encryptNumber();
-//		}
-
 		user.setLastName(user.getLastName().toUpperCase());
 		user.setFirstName(user.getFirstName().substring(0, 1).toUpperCase()
 				.concat(user.getFirstName().substring(1).toLowerCase()));

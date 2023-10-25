@@ -29,23 +29,24 @@
 						<div class="header-title">
 							<h1>Jasmin</h1>
 						</div>
+						<div style="padding: 1rem">
+							<input id="menu-toggle" type="checkbox" /> <label
+								class="menu-button-container" for="menu-toggle">
+								<div class="menu-button"></div>
+							</label>
 
-						<input id="menu-toggle" type="checkbox" /> <label
-							class="menu-button-container" for="menu-toggle">
-							<div class="menu-button"></div>
-						</label>
-
-						<ul class="menu">
-							<li class="user"><p>Hi
-									#{loginbean.connectedUser.firstName}</p></li>
-							<li><h:commandLink action="/home">
-									<h:outputText value="Home"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink
-									action="#{gestionarticlebean.seDeconnecter()}">
-									<h:outputText value="Sign out"></h:outputText>
-								</h:commandLink></li>
-						</ul>
+							<ul class="menu">
+								<li class="user"><p>Hi
+										#{loginbean.connectedUser.firstName}</p></li>
+								<li><h:commandLink action="/home">
+										<h:outputText value="Home"></h:outputText>
+									</h:commandLink></li>
+								<li><h:commandLink
+										action="#{gestionarticlebean.seDeconnecter()}">
+										<h:outputText value="Sign out"></h:outputText>
+									</h:commandLink></li>
+							</ul>
+						</div>
 					</div>
 				</h:form>
 			</f:view>
@@ -59,7 +60,7 @@
 						action="#{userbean.goToAddUserAdmin()}">
 					</h:commandButton>
 					<h3>Sélectionnez un profil pour afficher ses
-						utilisateurs et les modifier</h3>
+						utilisateurs</h3>
 					<h:selectOneMenu value="#{userbean.profile}" onchange="submit()"
 						valueChangeListener="#{userbean.profileChange}">
 						<f:selectItems value="#{userbean.profiles}" var="oneProfile"
@@ -68,8 +69,8 @@
 				</h:form>
 				<h:form>
 					<h4>List des utilisateurs du profil sélectionné :</h4>
-					<h:dataTable id="datatable" border="1" cellpadding="2"
-						cellspacing="3" style="text-align:center"
+					<h:dataTable id="datatable" border="1" cellpadding="1"
+						cellspacing="0" style="text-align:center"
 						value="#{userbean.listUsersByProfile}" var="currentUser">
 						<h:column>
 							<f:facet name="header">
@@ -118,31 +119,31 @@
 							<f:facet name="header">
 								<h:outputText value="Action" />
 							</f:facet>
-							<h:commandButton value="Modifier" style="color:black"
+							<h:commandLink value="Modifier" style="color:green"
 								action="#{userbean.selectUserActuel}">
 								<f:setPropertyActionListener target="#{userbean.userActuel}"
 									value="#{currentUser}" />
-							</h:commandButton>
+							</h:commandLink>
 						</h:column>
 						<h:column>
 							<f:facet name="header">
 								<h:outputText value="Action" />
 							</f:facet>
-							<h:commandButton value="Désactiver" style="color:black"
+							<h:commandLink value="Désactiver" style="color:red"
 								action="#{userbean.desactiveUser}">
 								<f:setPropertyActionListener target="#{userbean.userActuel}"
 									value="#{currentUser}" />
-							</h:commandButton>
+							</h:commandLink>
 						</h:column>
 						<h:column>
 							<f:facet name="header">
 								<h:outputText value="Action" />
 							</f:facet>
-							<h:commandButton value="Supprimer" style="color:black"
+							<h:commandLink value="Supprimer" style="color:red"
 								action="#{userbean.deleteUser()}">
 								<f:setPropertyActionListener target="#{userbean.userActuel}"
 									value="#{currentUser}" />
-							</h:commandButton>
+							</h:commandLink>
 						</h:column>
 					</h:dataTable>
 					<br />

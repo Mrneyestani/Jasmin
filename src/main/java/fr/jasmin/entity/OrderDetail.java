@@ -36,32 +36,6 @@ public class OrderDetail {
 		this.total = withBigDecimal(Float.parseFloat(total),2);
 	}
 	
-//	public OrderDetail(
-//			String productName = "Samsung S21, 
-//			String subtotal = "", 
-//			String shipping ="", 
-//			String tax ="", 
-//			String total="") {
-//		this.productName = productName;
-//		this.subtotal = withBigDecimal(Float.parseFloat(subtotal),2);
-//		this.shipping = withBigDecimal(Float.parseFloat(shipping),2);
-//		this.tax = withBigDecimal(Float.parseFloat(tax),2);
-//		this.total = withBigDecimal(Float.parseFloat(total),2);
-//	}
-	
-//	public OrderDetail(String productName, String subtotal, 
-//			String shipping, String tax, String total) {
-//		this.productName = gestionArticlesBean.getArticleActuel().getName();
-//		this.setProductName("Samsung S21");
-//		this.subtotal = withBigDecimal(gestionArticlesBean.getArticleActuel().getPrix(),2);
-//		this.setSubtotal(withBigDecimal(456.555f,2));
-//		this.setShipping(withBigDecimal(10.564f,2));
-//		this.setTax(withBigDecimal(10.786f,2));
-//		this.total = withBigDecimal(gestionArticlesBean.getItemCartActuel().getPrixTotal(),2);
-//		this.setTotal(withBigDecimal(425.265f,2));
-		
-//			}
-	
 
 	public String getProduct() {
 		return product;

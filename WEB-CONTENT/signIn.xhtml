@@ -27,22 +27,25 @@
 							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
 						</div>
 						<div class="header-title">
-							<h1>Jasmin</h1>
+							<h2>Bienvenu sur Jasmin E-Commerce</h2>
 						</div>
+						<div style="padding: 1rem">
 
-						<input id="menu-toggle" type="checkbox" /> <label
-							class="menu-button-container" for="menu-toggle">
-							<div class="menu-button"></div>
-						</label>
+							<input id="menu-toggle" type="checkbox" /> <label
+								class="menu-button-container" for="menu-toggle">
+								<div class="menu-button"></div>
+							</label>
 
-						<ul class="menu">
-							<li><h:commandLink action="#{gestionarticlebean.goToHome()}">
-									<h:outputText value="Home"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink action="#{loginbean.enregistrer()}">
-									<h:outputText value="Sign up"></h:outputText>
-								</h:commandLink></li>
-						</ul>
+							<ul class="menu">
+								<li><h:commandLink
+										action="#{gestionarticlebean.goToHome()}">
+										<h:outputText value="Home"></h:outputText>
+									</h:commandLink></li>
+								<li><h:commandLink action="#{loginbean.enregistrer()}">
+										<h:outputText value="Sign up"></h:outputText>
+									</h:commandLink></li>
+							</ul>
+						</div>
 					</div>
 				</h:form>
 			</f:view>
@@ -52,38 +55,45 @@
 				<h:form>
 					<div class="main-container">
 						<h1>Connection</h1>
-						<div class="row-div" style="border: 0.5px solid gray; border-collapse: collapse;border-radius: 0.7rem;margin-bottom:0.2rem">
+						<div class="row-div"
+							style="border: 0.5px solid gray; border-collapse: collapse; border-radius: 0.7rem; margin-bottom: 0.2rem">
 							<h:inputText value="#{loginbean.email}" required="true"
-								a:placeholder="Email" requiredMessage="email is required"
+								a:placeholder="Email" requiredMessage="Saisissez votre email!"
 								id="email" class="input-text">
-								<f:validateLength minimum="1" maximum="50"></f:validateLength>
+								<f:validateRegex
+									pattern="(?![_.-])((?![_.-][_.-])[a-z\d_.-]){0,63}[a-z\d]@((?!-)((?!--)[a-z\d-]){0,63}[a-z\d]\.){1,2}([a-z]{2,14}\.)?[a-z]{2,14}" />
+								<f:attribute name="validatorMessage" value="Email non valide" />
 							</h:inputText>
+						</div>
+						<div>
 							<h:message for="email" style="color:red" />
 						</div>
-						<div class="row-div" style="border: 0.5px solid gray; border-collapse: collapse;border-radius: 0.7rem">
+						<div class="row-div"
+							style="border: 0.5px solid gray; border-collapse: collapse; border-radius: 0.7rem">
 							<h:inputSecret value="#{loginbean.password}" required="true"
-								a:placeholder="Password" requiredMessage="password is required"
-								id="password" class="input-text">
-								<f:validateLength minimum="1" maximum="30"></f:validateLength>
+								a:placeholder="Mot de passe"
+								requiredMessage="Saisissez votre mot de passe!" id="password"
+								class="input-text">
+							<!-- 	<f:validateRegex pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$" /> -->
+								<f:attribute name="validatorMessage"
+									value="Mot de passe non valide!" />
 							</h:inputSecret>
+						</div>
+						<div>
 							<h:message for="password" style="color:red" />
+						</div>
+						<div>
+							<h:outputText value="#{loginbean.messageSuccess}"
+								style="color:green"></h:outputText>
+							<h:outputText value="#{loginbean.messageError}" style="color:red"></h:outputText>
 						</div>
 						<div class="row-div">
 							<h:commandButton id="submitConnection" value="Submit"
 								class="submit-button" action="#{loginbean.seLoguer()}" />
 						</div>
-
-						<h:panelGroup id="panelMessagess">
-							<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
-								<h:outputText value="#{loginbean.messageSuccess}"
-									style="color:green"></h:outputText>
-								<h:outputText value="#{loginbean.messageError}"
-									style="color:red"></h:outputText>
-							</h:panelGrid>
-						</h:panelGroup>
-
-						<div class="message">
+						<div class="message" style="margin-top: 1rem">
 							<h:link value="Vous n'avez pas de compte ? S'inscrire"
+								style="color:green; font-size:1rem; margin-top:1rem"
 								outcome="#{loginbean.enregistrer()}" />
 						</div>
 					</div>

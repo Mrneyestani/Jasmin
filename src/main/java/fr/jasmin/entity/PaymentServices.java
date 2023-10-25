@@ -1,8 +1,3 @@
-/**
- * PaymentServices class - encapsulates PayPal payment integration functions.
- * @author Nam Ha Minh
- * @copyright https://codeJava.net
- */
 package fr.jasmin.entity;
 
 import java.util.ArrayList;
@@ -23,10 +18,12 @@ import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 
 import fr.jasmin.vue.backingbean.UserBean;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class PaymentServices {
-	private static final String CLIENT_ID = "AY_kbxulmVjhqASM3jJtyNVEbnkvO5i0j00P-6MD5h5SvnHppBhGvFcmsoK-oLilND_hPEHREEa5GOZ6";
-	private static final String CLIENT_SECRET = "EMl3EzD4E4t5BB3bI4fhuyyDJgkfL5LNIjvLkFcRRUbyVU8o5WRQqoKtBF3N86U1P6oeKvFD5B-OJTKI";
+	static Dotenv dotenv = Dotenv.configure().directory("D:/IT/Java/Projects_Java/ProjectsDoranco/TpRyadh/JasminV6").load();
+	private static final String CLIENT_ID = dotenv.get("CLIENT_ID");
+	private static final String CLIENT_SECRET = dotenv.get("CLIENT_SECRET");
 	private static final String MODE = "sandbox";
 
 	public String authorizePayment(OrderDetail orderDetail)			

@@ -30,8 +30,6 @@ public class ItemCartDao implements IItemCartDao {
 		try {
 
 			tx = session.beginTransaction();
-//			session.save(itemCart.getItem());
-//			session.save(itemCart.getUser());
 			session.save(itemCart);
 			tx.commit();
 

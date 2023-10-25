@@ -74,8 +74,6 @@ public class FileUploadMBean implements Serializable {
 		FileUploadMBean.nomPhoto = nomPhoto;
 	}
 
-		// ========================================================
-
 	// ========================================================
 	public String uploadFile() throws IOException {
 		boolean file1Success = false;
@@ -118,7 +116,6 @@ public class FileUploadMBean implements Serializable {
 		}
 
 		if (file1Success || file2Success) {
-			// System.out.println("File uploaded to : " + path);
 			/**
 			 * set the success message when the file upload is successful
 			 */
@@ -130,9 +127,6 @@ public class FileUploadMBean implements Serializable {
 			setMessage("Error, select atleast one file!");
 		}
 
-		/**
-		 * return to the same view
-		 */
 		return null;
 	}
 

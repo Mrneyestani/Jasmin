@@ -27,7 +27,6 @@ public class ArticleBean implements Serializable {
 	
 	private final IItemDao itemDao = new ItemDao();
 	private final IItemMetier itemMetier = new ItemMetier();
-//	private final CategorieBean categorieBean = new CategorieBean();
 	
 	
 	private Integer idCommande;
@@ -112,11 +111,6 @@ public class ArticleBean implements Serializable {
 			Utils.trace("new itemId  : %s\n", this.getItemId());
 			Utils.trace("new currentItemId  : %s\n", this.getCurrentItem());
 			
-//			this.setItemId(this.getItemList()
-//								.get(0)
-//								.getId());
-//			this.currentItem = itemList.get(0);
-			
 		}else {
 			this.setItemId(1);
 			this.currentItem = new Item(); 
@@ -154,30 +148,11 @@ public class ArticleBean implements Serializable {
 		initialiseArticle();
 	}
 
-//	public String addArticlesToPanier() {
-//		try {
-//
-//			submit();
-////			items = categorieBean.getItems();
-//			for (Item item : items) {
-//				if (item.getIsChecked() == true) {
-//
-//					mapQuantites.put(item.getId(), item.getQuantite());
-//				}
-//			}
-//		} catch (Exception e) {
-//			messageError = "...";
-//		}
-//		return "";
-//	}
 //------------------------Action------------------------------------
 	
 	public Item updateArticle() {
 		
 		   this.currentItem = new Item();
-////		   CategorieBean categorieBean = new CategorieBean();
-//		   Utils.trace("CurrentCategorie  : %s\n", categorieBean.getCurrentCategorie());
-//		   setItemList(categorieBean.getCurrentCategorie().getItems());
 		for (Item item : this.getItemList()) {
 			
 			if (item.getId() == this.getItemId()) {
@@ -201,8 +176,6 @@ public class ArticleBean implements Serializable {
 			this.setStock(this.getCurrentItem().getStock());
 			this.setIsVendable(this.getCurrentItem().getIsVendable());
 
-//			itemList.add(item);
-			
 			messageSuccess = "Article selectioné avec succès.";
 			messageError = "";
 		} catch (Exception e) {
@@ -222,13 +195,8 @@ public class ArticleBean implements Serializable {
 		
 		try {
 			Utils.trace("CurrentItem  : %s\n", this.getCurrentItem());
-//			item = itemMetier.getArticle(getId());
 			Utils.trace("Id  : %s\n", this.getId());
 			itemModified = itemMetier.getArticle(this.getId());
-//			itemModified = this.getCurrentItem();
-//			Utils.trace("Id  : %s\n", this.getId());
-//			Utils.trace("Id  : %s\n", this.getCurrentItem());
-//			Utils.trace("currentItem  : %s\n", this.currentItem);
 			
 			itemModified.setName(this.nom);
 			itemModified.setDescription(this.description);
@@ -241,8 +209,6 @@ public class ArticleBean implements Serializable {
 			
 			itemMetier.updateArticle(itemModified);
 			itemList = itemDao.getArticles();
-//			CategorieBean.currentCategorie = itemModified.getCategory();
-//			CategorieBean.currentCategorie.getItems();
 			
 			messageSuccess = "Article a été mis à jour avec succès.";
 			messageError = "";
@@ -258,7 +224,6 @@ public class ArticleBean implements Serializable {
 	public void deleteArticle() {
 		try {
 			itemMetier.removeArticle(this.getCurrentItem());
-//			itemList = itemDao.getArticles();
 			
 			messageSuccess = "Article est supprimé avec succès.";
 			messageError = "";

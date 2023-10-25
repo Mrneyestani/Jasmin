@@ -5,7 +5,6 @@ public class MasterBean{
 	private String promptStatus = null ;
 		
 	public MasterBean() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getPromptStatus() {
@@ -24,8 +23,4 @@ public class MasterBean{
 		this.setPromptStatus(null);
 	}
 	
-	//------------------------------------action---------------------------------------------
-	
-	
-
 }

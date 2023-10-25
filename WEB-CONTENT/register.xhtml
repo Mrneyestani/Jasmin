@@ -5,18 +5,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:h="http://java.sun.com/jsf/html"
+	 xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-<head>
+<h:head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<h:outputStylesheet library="css" name="common-style.css" />
+<link rel="stylesheet" type="text/css" href="/JasminV6/javax.faces.resource/common-style.css.jsf?ln = css" />
+<h:outputStylesheet library="css" name="common-style.css" target= "body" />
 <title>Register User</title>
-</head>
+</h:head>
 
-<body>
-
+<h:body>
 	<ui:composition template="/resources/template/layout.xhtml">
 
 		<!-- Redefinition de la zone 'header' du layout  -->
@@ -28,22 +28,24 @@
 							<h:graphicImage library="images" name="Jasmin.jpg" class="w5" />
 						</div>
 						<div class="header-title">
-							<h1>Jasmin</h1>
+							<h2>Jasmin E-Commerce</h2>
 						</div>
+						<div style="padding: 1rem">
+							<input id="menu-toggle" type="checkbox" /> <label
+								class="menu-button-container" for="menu-toggle">
+								<div class="menu-button"></div>
+							</label>
 
-						<input id="menu-toggle" type="checkbox" /> <label
-							class="menu-button-container" for="menu-toggle">
-							<div class="menu-button"></div>
-						</label>
-
-						<ul class="menu">
-							<li><h:commandLink action="#{gestionarticlebean.goToHome()}">
-									<h:outputText value="Home"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink action="/signIn">
-									<h:outputText value="Sign in"></h:outputText>
-								</h:commandLink></li>
-						</ul>
+							<ul class="menu">
+								<li><h:commandLink
+										action="#{gestionarticlebean.goToHome()}">
+										<h:outputText value="Home"></h:outputText>
+									</h:commandLink></li>
+								<li><h:commandLink action="/signIn">
+										<h:outputText value="Sign in"></h:outputText>
+									</h:commandLink></li>
+							</ul>
+						</div>
 					</div>
 				</h:form>
 			</f:view>
@@ -52,129 +54,142 @@
 		<ui:define name="content">
 			<f:view>
 				<h:form>
-					<h3>Ajouter un utilisateur</h3>
+				<h:outputStylesheet library="css" name="common-style.css" target= "body" />
+					<h3>S'inscrire</h3>
 					<h:panelGrid id="panel" columns="3" cellpadding="2" cellspacing="1">
 
-						<h:outputLabel value="Nom :" />
-						<h:inputText id="name" required="true"
-							value="#{userbean.lastName}"
-							requiredMessage="Le nom est obligatoire !">
-							<f:validateLength minimum="3" maximum="30"></f:validateLength>
-						</h:inputText>
-						<h:message for="name" style="color:red"></h:message>
-
-						<h:outputLabel value="Prénom :" />
-						<h:inputText id="firstName" required="true"
+						<h:outputLabel value="Prénom" />
+						<h:inputText id="firstName" required="true" style="text-align: center" 
 							value="#{userbean.firstName}"
-							requiredMessage="Le prénom est obligatoire !">
-							<f:validateLength minimum="3" maximum="30"></f:validateLength>
+							requiredMessage="Saisissez votre prénom!">
+							<f:validateRegex
+								pattern="^((')?[A-Za-zÀ-ÖØ-öø-ÿ]+(')?)+((-)?((')?[A-Za-zÀ-ÖØ-öø-ÿ]+(')?((-')?[A-Za-zÀ-ÖØ-öø-ÿ]+(')?)*)+)*(\d)?(\s)?$" />
+							<f:attribute name="validatorMessage"
+								value="Prénom non valide(Longueur (2-40 caractères), lettres, tirets et apostrophes)" />
+							<f:validateLength minimum="2" maximum="40"></f:validateLength>
 						</h:inputText>
 						<h:message for="firstName" style="color:red"></h:message>
 
-						<h:outputLabel value="Email :" />
-						<h:inputText id="email" required="true" value="#{userbean.email}"
-							requiredMessage="L'email est obligatoire !">
-							<f:validateLength minimum="1" maximum="50"></f:validateLength>
+						<h:outputLabel value="Nom" />
+						<h:inputText id="name" required="true" style="text-align: center"
+							value="#{userbean.lastName}"
+							requiredMessage="Saisissez votre nom!">
+							<f:validateRegex
+								pattern="^((')?[A-Za-zÀ-ÖØ-öø-ÿ]+(')?)+((-)?((')?[A-Za-zÀ-ÖØ-öø-ÿ]+(')?((-')?[A-Za-zÀ-ÖØ-öø-ÿ]+(')?)*)+)*(\d)?(\s)?$" />
+							<f:attribute name="validatorMessage"
+								value="Nom non valide(Longueur (2-40 caractères), lettres, tirets et apostrophes)" />
+							<f:validateLength minimum="2" maximum="40"></f:validateLength>
+						</h:inputText>
+						<h:message for="name" style="color:red"></h:message>
+
+						<h:outputLabel value="Email" />
+						<h:inputText id="email" required="true" value="#{userbean.email}" style="text-align: center"
+							requiredMessage="Saisissez votre email!">
+							<f:validateRegex
+								pattern="(?![_.-])((?![_.-][_.-])[a-z\d_.-]){0,63}[a-z\d]@((?!-)((?!--)[a-z\d-]){0,63}[a-z\d]\.){1,2}([a-z]{2,14}\.)?[a-z]{2,14}" />
+							<f:attribute name="validatorMessage" value="Email non valide" />
 						</h:inputText>
 						<h:message for="email" style="color:red"></h:message>
 
-						<h:outputLabel value="Mot de passe : "></h:outputLabel>
-						<h:inputSecret id="motDePasse" value="#{userbean.password}"
-							required="true"
-							requiredMessage="Le mot de passe est obligatoire !">
-							<f:validateLength minimum="1" maximum="30" />
+						<h:outputLabel value="Mot de passe"></h:outputLabel>
+						<h:inputSecret id="motDePasse" value="#{userbean.password}" 
+							style="text-align: center" required="true"
+							a:placeholder="8caractères, 1maj et 1min"
+							requiredMessage="Saisissez votre mot de passe!">
+							<f:validateRegex pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$" />
+							<f:attribute name="validatorMessage"
+								value="8 caractères, 1 majuscule, 1 minuscule et 1 chiffre" />
 						</h:inputSecret>
 						<h:message for="motDePasse" style="color:red"></h:message>
 
-						<h:outputLabel value="Confirmation Mot de passe : "></h:outputLabel>
+						<h:outputLabel value="Confirmation de mot de passe"></h:outputLabel>
 						<h:inputSecret id="motDePasseConfirmation"
-							value="#{userbean.passwordConfirmation}" required="true"
-							requiredMessage="Le mot de passe de confirmation est obligatoire !">
-							<f:validateLength minimum="1" maximum="30" />
+							value="#{userbean.passwordConfirmation}" required="true" style="text-align: center"
+							requiredMessage="Saisissez à nouveau votre mot de passe!">
+							<f:validateRegex pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$" />
+							<f:attribute name="validatorMessage"
+								value="8 caractères, 1 majuscule, 1 minuscule et 1 chiffre" />
 						</h:inputSecret>
 						<h:message for="motDePasseConfirmation" style="color:red"></h:message>
 
-						<h:outputLabel value="Date de naissance (jj/mm/aaaa)" />
+						<h:outputLabel value="Date de naissance" />
 						<h:inputText id="birthDate" required="true"
+							a:placeholder="jj/mm/aaaa" style="text-align: center"
 							value="#{userbean.birthDate}"
-							requiredMessage="La date de naissance est obligatoire !">
-							<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-					(jj/mm/aaaa)
-								<f:validateLength minimum="6" maximum="30"></f:validateLength>
+							requiredMessage=" Saisissez votre date de naissance!">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+							<f:validateLength minimum="6" maximum="30" />
 						</h:inputText>
-						<h:message for="birthDate" style="color:red"></h:message>
+						<h:message for="birthDate" style="color:red" />
 
-						<h:outputLabel value="Portable :" />
-						<h:inputText id="phone" required="true" value="#{userbean.phone}"
-							requiredMessage="Le numéro de portable est obligatoire !">
-							<f:validateLength minimum="6" maximum="30"></f:validateLength>
+						<h:outputLabel value="Portable" />
+						<h:inputText id="phone" required="true" value="#{userbean.phone}" style="text-align: center"
+							requiredMessage="Saisissez votre numéro de portable!">
+							<f:validateRegex pattern="^(0|\+\d)+{1,4}(\d)+{1,14}$" />
+							<f:attribute name="validatorMessage"
+								value="Exemple : +338888888888 ou 0888888888" />
 						</h:inputText>
 						<h:message for="phone" style="color:red"></h:message>
 					</h:panelGrid>
 
-					<h4>Ajouter une adresse :</h4>
+					<h:panelGroup id="panelMessagess">
+						<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+							<h:outputText value="#{userbean.messageSuccess}"
+								style="color:green"></h:outputText>
+							<h:outputText value="#{userbean.messageError}" style="color:red"></h:outputText>
+						</h:panelGrid>
+					</h:panelGroup>
+
+					<h4>Adresse :</h4>
 
 					<h:panelGroup>
 
 						<h:panelGrid columns="3" cellpadding="0" cellspacing="8">
-							<h:outputLabel value="Numéro : "></h:outputLabel>
-							<h:inputText id="numero" value="#{userbean.number}"
-								required="true" requiredMessage="Le numéro est obligatoire !">
+							<h:outputLabel value="Numéro"></h:outputLabel>
+							<h:inputText id="numero" value="#{userbean.number}" style="text-align: center"
+								required="true" requiredMessage="Saisissez le numéro!">
 							</h:inputText>
 							<h:message for="numero" style="color:red"></h:message>
 
-							<h:outputLabel value="Rue : "></h:outputLabel>
-							<h:inputText id="rue" value="#{userbean.street}" required="true"
-								requiredMessage="La rue est obligatoire !">
+							<h:outputLabel value="Rue"></h:outputLabel>
+							<h:inputText id="rue" value="#{userbean.street}" required="true" style="text-align: center"
+								requiredMessage="Saisissez la rue!">
 							</h:inputText>
 							<h:message for="rue" style="color:red"></h:message>
 
-							<h:outputLabel value="Code postal : "></h:outputLabel>
-							<h:inputText id="codePostal" value="#{userbean.postalCode}"
-								required="true"
-								requiredMessage="Le code postal est obligatoire !">
+							<h:outputLabel value="Code postal"></h:outputLabel>
+							<h:inputText id="codePostal" value="#{userbean.postalCode}" style="text-align: center"
+								required="true" requiredMessage="Saisissez le code postal!">
 							</h:inputText>
 							<h:message for="codePostal" style="color:red"></h:message>
 
-							<h:outputLabel value="Ville : "></h:outputLabel>
-							<h:inputText id="ville" value="#{userbean.city}" required="true"
-								requiredMessage="La ville est obligatoire !">
+							<h:outputLabel value="Ville"></h:outputLabel>
+							<h:inputText id="ville" value="#{userbean.city}" required="true" style="text-align: center"
+								requiredMessage="Saisissez la ville!">
 							</h:inputText>
 							<h:message for="ville" style="color:red"></h:message>
 
-							<h:outputLabel value="Pays : "></h:outputLabel>
-							<h:inputText id="pays" value="#{userbean.country}"
-								required="true" requiredMessage="Le pays est obligatoire !">
+							<h:outputLabel value="Pays"></h:outputLabel>
+							<h:inputText id="pays" value="#{userbean.country}" style="text-align: center"
+								required="true" requiredMessage="Saisissez le pays!">
 							</h:inputText>
 							<h:message for="pays" style="color:red"></h:message>
-
 						</h:panelGrid>
-
 					</h:panelGroup>
-
 					<p></p>
-					<h:commandButton id="valider" value="Valider"
-						action="#{userbean.addUserClient()}" />
+					<h:commandButton id="valider" style="padding:0.2rem"
+						value="Valider" action="#{userbean.addUserClient()}" />
 					<br></br>
 					<div class="message">
 						<h:link value="Vous avez déjà un compte ? Se connecter"
-							style="color:green" outcome="/signIn" />
+							style="color:green; font-size:1rem" outcome="/signIn" />
 					</div>
-
-					<h:panelGroup id="panelMessagess">
-						<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
-							<h:outputText value="#{loginbean.messageSuccess}"
-								style="color:green"></h:outputText>
-							<h:outputText value="#{loginbean.messageError}" style="color:red"></h:outputText>
-						</h:panelGrid>
-					</h:panelGroup>
-
 				</h:form>
 			</f:view>
 		</ui:define>
 
 	</ui:composition>
-</body>
+</h:body>
 </html>
 
 

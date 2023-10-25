@@ -42,135 +42,6 @@ public final class DataTest implements IConstant {
 	}
 
 	// ---------------------------------------------------------------------------------------------------
-	//public static Order genOrder() {
-
-//		public Order( String orderNumber,Date deliveryDate, float totalDiscount,
-//				float shippingCosts, float grandTotal) {
-		
-		
-//		return new Order(DataTest.orderNumber(),
-//				Utils.addDate(DATE_NOW, Utils.randInt(7, 10)),
-//				Utils.randFloat(0, 1000),
-//				Utils.randFloat(1, 100),
-//				Utils.randFloat(1000, 2000));
-
-	//}
-
-	// ---------------------------------------------------------------------------------------------------
-//	public static Item genItem() {
-
-//		return new Item(DataTest.itemName(), DataTest.itemDescription(), Utils.randFloat(1, 100), Utils.randInt(1, 90),
-//				Utils.randInt(1, 100), Utils.randInt(0, 1) > 0 ? true : false, DataTest.picUrl(), DataTest.videoUrl());
-//	}
-
-//	// ---------------------------------------------------------------------------------------------------
-	
-	
-//	public static Comment genComment() {
-//		return new Comment (DataTest.comment(), Utils.randInt(0, 5));
-//	}
-//	public Comment( String text, int grade, Item item, Costumer costumer) {
-//	this(DEFAULT_ID,text, grade, item, costumer);
-
-
-//	// ---------------------------------------------------------------------------------------------------
-//	public static BankCard genBankCardNoName() {
-//
-//		BankCard myBankCard = new BankCard();
-//		int bin = Utils.randInt(111111, 999999);
-//		int digit3 = Utils.randInt(0, 999);
-//		int digit8 = Utils.randInt(11111111, 99999999);
-//
-//		myBankCard.setCardClairNumber(String.format("%06d%08d", bin, digit8));
-//		Date startDate = Utils.string2Date("01/01/2023", "dd/MM/yyyy");
-//		Date endDate = Utils.string2Date("01/01/2025", "dd/MM/yyyy");
-//		myBankCard.setExpiryDateJava(DataTest.date(startDate, endDate));
-//		myBankCard.setClairCrypto(String.format("%03d", digit3));
-//
-//		return myBankCard;
-//	}
-//
-//	// ---------------------------------------------------------------------------------------------------
-//	public static BankCard genBankCard(Costumer costumer) {
-//
-//		int nbday = Utils.randInt(1, 30) * 30;
-//		String crypto = String.format("%03d", Utils.randInt(0, 999));
-//
-//		return new BankCard(DataTest.bankCardNumber(), Utils.addDate(DATE_NOW, nbday), crypto, costumer);
-//	}
-
-//
-//	// ---------------------------------------------------------------------------------------------------
-//	public static User genUser() {
-//
-//		Date startDate = Utils.string2Date("01/01/1900", "dd/MM/yyyy");
-//		Date endDate = Utils.string2Date("01/01/2023", "dd/MM/yyyy");
-//		Gender gender = DataTest.gender();
-//		String firstname = DataTest.firstname(gender);
-//		String lastname = DataTest.lastname();
-//
-//		return new User(DataTest.profile(), DataTest.email(firstname, lastname), DataTest.pass(firstname), true);
-//	}
-
-//	// ---------------------------------------------------------------------------------------------------
-//	public static Costumer genCostumer() {
-//
-//		Date startDate = Utils.string2Date("01/01/1900", "dd/MM/yyyy");
-//		Date endDate = Utils.string2Date("01/01/2023", "dd/MM/yyyy");
-//		Gender gender = DataTest.gender();
-//		String firstname = DataTest.firstname(gender);
-//		String lastname = DataTest.lastname();
-//
-//		return new Costumer(gender, firstname, lastname, DataTest.birthDate(), DataTest.phone(), Profile.COSTUMER,
-//				DataTest.email(firstname, lastname), DataTest.pass(firstname));
-//
-//	}
-
-//	// ---------------------------------------------------------------------------------------------------
-//	public static Item genItem() {
-//		return new Item(DataTest.itemName(), DataTest.sentence(), Utils.randInt(1, 1000) / 10.0, Utils.randInt(0, 99),
-//				Utils.randInt(0, 9999), DataTest.picUrl(), DataTest.videoUrl());
-//
-//	}
-//
-////---------------------------------------------------------------------------------------------------
-//	public static Address genAddress() {
-//
-//		return new Address(DataTest.number(), DataTest.numberType(), DataTest.streetType(), DataTest.street(),
-//				DataTest.city(), DataTest.zipcode());
-//	}
-
-////---------------------------------------------------------------------------------------------------
-//	public static Param genParam() {
-//
-//		try {
-//			return new Param(DataTest.number(), DataTest.number(),
-//					"small string :" + DataTest.street() + " " + DataTest.city() + " " + DataTest.zipcode(),
-//					"big string :" + DataTest.street() + " " + DataTest.city() + " " + DataTest.zipcode(),
-//					DataTest.firstname().getBytes(CHARSET), DataTest.birthDate());
-//		} catch (UnsupportedEncodingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-
-//	// ---------------------------------------------------------------------------------------------------
-//	public static String sentence() {
-//
-//		int sujectType = subjectType();
-//
-//		return (String.format(" %s %s %s %s ", DataTest.subject(sujectType),
-//				DataTest.verb(sujectType), DataTest.subject(sujectType), DataTest.complement(sujectType)
-//				));
-//
-//	}
-//
-	// ---------------------------------------------------------------------------------------------------
-
-	// ---------------------------------------------------------------------------------------------------
-
-	// ---------------------------------------------------------------------------------------------------
 	public static String crypto() {
 
 		return String.format("0.3%S", Utils.randInt(0, 999));
@@ -179,14 +50,10 @@ public final class DataTest implements IConstant {
 	// ---------------------------------------------------------------------------------------------------
 	public static String orderNumber() {
 		
-//		JSMyyyymmdd-<1.. 1000>-FR-<1.99>
-		
 		return String.format("JSM-%s-%05d-FR-%02d", 
 				Utils.date2String(DATE_NOW, "yyyyMMdd"),
 				Utils.randInt(1, 99999),
 				Utils.randInt(1, 99));
-				
-	
 	}
 	// ---------------------------------------------------------------------------------------------------
 	public static String bankCardNumber() {
@@ -195,7 +62,6 @@ public final class DataTest implements IConstant {
 		int digit8 = Utils.randInt(0, 99999999);
 
 		return (String.format("%06d%08d", bin, digit8));
-
 	}
 
 	// ---------------------------------------------------------------------------------------------------
@@ -205,7 +71,6 @@ public final class DataTest implements IConstant {
 		int nbDay = Utils.randInt(1, 100 * 365);
 
 		return Utils.addDate(DATE_NOW, -nbDay);
-
 	}
 
 	// ---------------------------------------------------------------------------------------------------
@@ -213,7 +78,6 @@ public final class DataTest implements IConstant {
 
 		return Utils.stripAccent(String.format("%s.%s@%s.%s", firstname.toLowerCase(), lastname.toLowerCase(),
 				DataTest.domain(), DataTest.domainExtension()));
-
 	}
 
 	// ---------------------------------------------------------------------------------------------------
@@ -233,14 +97,12 @@ public final class DataTest implements IConstant {
 
 		return String.format("http://www.%s.%s/%s", DataTest.domain(), DataTest.domainExtension(),
 				DataTest.article().replace(' ', '-'));
-
 	}
 
 //---------------------------------------------------------------------------------------------------
 	public static String phone() {
 
 		return String.format("%05d", Utils.randInt(0, 9999)) + String.format("%05d", Utils.randInt(0, 99999));
-
 	}
 
 	// ---------------------------------------------------------------------------------------------------
@@ -257,14 +119,12 @@ public final class DataTest implements IConstant {
 		}
 
 		return new String(charTab);
-//		return inString;
 	}
 
 //---------------------------------------------------------------------------------------------------
 	public static String firstname() {
 
 		return DataTest.firstname(Gender.OTHER);
-
 	}
 
 // ---------------------------------------------------------------------------------------------------
@@ -310,7 +170,6 @@ public final class DataTest implements IConstant {
 	// ---------------------------------------------------------------------------------------------------
 	public static String firstname(Gender gender) {
 
-//		Utils.trace(gender.getValue());
 		if (firstnameList == null) {
 			firstnameList = new ArrayList<String>();
 
@@ -374,13 +233,11 @@ public final class DataTest implements IConstant {
 //---------------------------------------------------------------------------------------------------
 	public static String numberType() {
 
-//		Utils.trace("numberType");
 		if (numberTypeList == null) {
 			numberTypeList = new ArrayList<String>();
 
 			ResourceBundle myResource = ResourceBundle.getBundle("testData"); // retreive data from Dbase.properties
 			String propertieValue = myResource.getString("NumberType");
-//			Utils.trace(propertieValue);
 			String propertieArray[] = propertieValue.split(";");
 			for (String value : propertieArray) {
 
@@ -388,8 +245,6 @@ public final class DataTest implements IConstant {
 			}
 		}
 		int position = Utils.randInt(0, numberTypeList.size() - 1);
-//		Utils.trace(String.format("%d %d", position,numberTypeList.size()));
-//		Utils.trace(numberTypeList.get(position));
 
 		return numberTypeList.get(position);
 	}
@@ -561,7 +416,6 @@ public final class DataTest implements IConstant {
 
 	// ---------------------------------------------------------------------------------------------------
 	public static LocalDate localDate(LocalDate lowerDate, LocalDate upperDate) {
-//			Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		long periode = lowerDate.until(upperDate, ChronoUnit.DAYS);
 
 		int nbDays = Utils.randInt(0, (int) periode);

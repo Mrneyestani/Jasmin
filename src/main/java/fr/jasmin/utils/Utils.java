@@ -30,8 +30,6 @@ public final class Utils implements IUtils {
 // ------------------------------------------------------------------------------------------------
 	public static Date addDate(Date date, int nbDay) {
 
-//		Utils.trace(Utils.date2String(date,"dd/MM/yyyy"));
-
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date); // original date
 		calendar.add(Calendar.DATE, nbDay); // Adding days

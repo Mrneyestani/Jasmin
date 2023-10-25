@@ -30,21 +30,23 @@
 						<div class="header-title">
 							<h1>Jasmin</h1>
 						</div>
-						<input id="menu-toggle" type="checkbox" /> <label
-							class="menu-button-container" for="menu-toggle">
-							<div class="menu-button"></div>
-						</label>
-						<ul class="menu">
-							<li class="user"><p>Hi
-									#{loginbean.connectedUser.firstName}</p></li>
-							<li><h:commandLink action="/home">
-									<h:outputText value="Home"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink
-									action="#{gestionarticlebean.seDeconnecter()}">
-									<h:outputText value="Sign out"></h:outputText>
-								</h:commandLink></li>
-						</ul>
+						<div style="padding: 1rem">
+							<input id="menu-toggle" type="checkbox" /> <label
+								class="menu-button-container" for="menu-toggle">
+								<div class="menu-button"></div>
+							</label>
+							<ul class="menu">
+								<li class="user"><p>Hi
+										#{loginbean.connectedUser.firstName}</p></li>
+								<li><h:commandLink action="/home">
+										<h:outputText value="Home"></h:outputText>
+									</h:commandLink></li>
+								<li><h:commandLink
+										action="#{gestionarticlebean.seDeconnecter()}">
+										<h:outputText value="Sign out"></h:outputText>
+									</h:commandLink></li>
+							</ul>
+						</div>
 					</div>
 				</h:form>
 			</f:view>
@@ -59,7 +61,7 @@
 					<h:panelGrid id="panel" columns="3" cellpadding="2" cellspacing="1">
 
 						<h:outputLabel value="Nom Catégorie :" />
-						<h:inputText id="nomCategorie" required="true"
+						<h:inputText id="nomCategorie" required="true" style="text-align: center"
 							value="#{gestionarticlebean.nomCategorie}"
 							requiredMessage="Le nom de categorie est obligatoire !">
 							<f:validateLength minimum="3" maximum="30"></f:validateLength>
@@ -67,7 +69,7 @@
 						<h:message for="nomCategorie" style="color:red"></h:message>
 
 						<h:outputLabel value=" Remise Categorie :" />
-						<h:inputText id="remiseCategorie" required="false"
+						<h:inputText id="remiseCategorie" required="false" style="text-align: center"
 							value="#{gestionarticlebean.remiseCategorie}"
 							requiredMessage="La remise categorie est obligatoire !">
 							<f:validateLength minimum="1" maximum="30"></f:validateLength>
@@ -84,7 +86,7 @@
 						<h:message for="isRemiseCumulable" style="color:red"></h:message>
 
 						<h:outputLabel value=" Photo Categorie :" />
-						<h:inputText id="photoCategorie" required="false"
+						<h:inputText id="photoCategorie" required="false" style="text-align: center"
 							value="#{gestionarticlebean.photoCategorie}"
 							requiredMessage="La photo categorie est obligatoire !">
 						</h:inputText>
@@ -118,7 +120,7 @@
 						<h:panelGrid columns="3" cellpadding="0" cellspacing="8">
 
 							<h:outputLabel value="Nom"></h:outputLabel>
-							<h:inputText id="name" value="#{gestionarticlebean.nomArticle}"
+							<h:inputText id="name" value="#{gestionarticlebean.nomArticle}" style="text-align: center"
 								required="true"
 								requiredMessage="La Description d'article est obligatoire !">
 							</h:inputText>
@@ -126,26 +128,26 @@
 
 							<h:outputLabel value="Description"></h:outputLabel>
 							<h:inputText id="description"
-								value="#{gestionarticlebean.description}" required="true"
+								value="#{gestionarticlebean.description}" required="true" style="text-align: center"
 								requiredMessage="La Description d'article est obligatoire !">
 							</h:inputText>
 							<h:message for="description" style="color:red"></h:message>
 
 							<h:outputLabel value="Prix"></h:outputLabel>
-							<h:inputText id="prix" value="#{gestionarticlebean.prix}"
+							<h:inputText id="prix" value="#{gestionarticlebean.prix}" style="text-align: center"
 								required="true" requiredMessage="Le prix est obligatoire !">
 							</h:inputText>
 							<h:message for="prix" style="color:red"></h:message>
 
 							<h:outputLabel value="Remise Article"></h:outputLabel>
 							<h:inputText id="remise"
-								value="#{gestionarticlebean.remiseArticle}" required="true"
+								value="#{gestionarticlebean.remiseArticle}" required="true" style="text-align: center"
 								requiredMessage="La Remise d'article est obligatoire !">
 							</h:inputText>
 							<h:message for="remise" style="color:red"></h:message>
 
 							<h:outputLabel value="Stock"></h:outputLabel>
-							<h:inputText id="stock" value="#{gestionarticlebean.stock}"
+							<h:inputText id="stock" value="#{gestionarticlebean.stock}" style="text-align: center"
 								required="true" requiredMessage="Le stock est obligatoire !">
 							</h:inputText>
 							<h:message for="stock" style="color:red"></h:message>
@@ -161,17 +163,11 @@
 
 							<h:outputLabel value="videos Article"></h:outputLabel>
 							<h:inputText id="videos"
-								value="#{gestionarticlebean.videosArticle}" required="false"
+								value="#{gestionarticlebean.videosArticle}" required="false" style="text-align: center"
 								requiredMessage="La videosArticle obligatoire !">
 							</h:inputText>
 							<h:message for="videos" style="color:red"></h:message>
 
- 						<!-- 	<h:outputLabel value="Nom de photo"/>
-							<h:inputText id="nomPhoto"
-								value="#{Gestionarticlebean.photosArticle}" required="false"
-								requiredmessage="Nom de la photo est obligatoire !"/>
-							<h:message for="nomPhoto" style="color:red"></h:message> -->
-							
 							<h:outputLabel value="Téléchager/modofier la photo"></h:outputLabel>
 							<h:inputFile id="photoUpload" value="#{fileUploadMBean.file1}" required="false"
 								requiredMessage="Téléchargement de la photo d'article est obligatoire !"/>

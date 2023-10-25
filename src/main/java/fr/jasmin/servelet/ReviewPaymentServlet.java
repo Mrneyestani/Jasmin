@@ -1,8 +1,3 @@
-/**
- * ReviewPaymentServlet class - show review payment page.
- * @author Nam Ha Minh
- * @copyright https://codeJava.net
- */
 package fr.jasmin.servelet;
 
 import java.io.IOException;

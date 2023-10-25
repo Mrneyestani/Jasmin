@@ -53,7 +53,6 @@ public class UserBean implements Serializable {
 	private User connectedUser;
 	private User UserActuel;
 	private List<User> listUsersByProfile;
-	private List<String> profiles;
 	
 	public UserBean() {
 		messageSuccess = "";
@@ -88,9 +87,7 @@ public class UserBean implements Serializable {
 		address.setCountry(country);
 		address.setStreet(street);
 		address.setPostalCode(postalCode);
-
 		address.setUser(user);
-//		user.getAddresses().add(address);
 
 		userMetier.addUser(user, password);
 		userMetier.addAddress(address);
@@ -230,7 +227,6 @@ public class UserBean implements Serializable {
 			this.dateFinValidite = carte.getDateFinValidite();
 			this.reelNumber = EncryptionAlgorithm.decrypt(carte.getNumber());
 			this.reelCryptogram = EncryptionAlgorithm.decrypt(carte.getCryptogram());
-			
 
 		} catch (Exception e) {
 			messageSuccess = "";
@@ -440,10 +436,8 @@ public class UserBean implements Serializable {
 			carte.setNameOwner(this.nameOwner);
 			carte.setFirstNameOwner(this.firstNameOwner);
 			carte.setDateFinValidite(Dates.convertDateUtilToSql(dateFinValidite));
-//			carte.setReelCryptogram(reelCryptogram);
 			carte.setUser(getUserClientById());
 			userMetier.addCarte(carte, reelNumber, reelCryptogram);
-//			Utils.trace("connected user  : %s\n", carte);
 			messageSuccess = "La carte a été ajoutée avec succès.";
 			messageError = "";
 			
@@ -471,10 +465,8 @@ public class UserBean implements Serializable {
 				carte.setNameOwner(nameOwner);
 				carte.setFirstNameOwner(firstNameOwner);
 				carte.setDateFinValidite(Dates.convertDateUtilToSql(dateFinValidite));
-//				carte.setReelCryptogram(reelCryptogram);
 				carte.setUser(getUserClientById());
 				userMetier.updateCarte(carte, reelNumber, reelCryptogram);
-//				Utils.trace("connected user  : %s\n", carte);
 				messageSuccess = "La carte a été mise à jour avec succès.";
 				messageError = "";
 			} catch (Exception e) {

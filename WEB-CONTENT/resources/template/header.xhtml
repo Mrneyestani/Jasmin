@@ -10,9 +10,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <head>
-<h:outputStylesheet library="css" name="table-style.css" />
 <h:outputStylesheet library="css" name="common-style.css" />
-
 </head>
 <body>
 	<ui:composition>
@@ -24,21 +22,23 @@
 					</div>
 
 					<div class="header-title">
-						<h2>Bienvenu sur Jasmin</h2>
+						<h2>Bienvenu au Jasmin E-Commerce</h2>
 					</div>
-
-					<input id="menu-toggle" type="checkbox" /> <label
-						class="menu-button-container" for="menu-toggle">
-						<div class="menu-button"></div>
-					</label>
-					<ul class="menu">
-						<li><h:commandLink action="/home.xhtml">
-								<h:outputText value="Home"></h:outputText>
-							</h:commandLink></li>
-						<li><h:commandLink action="#{gestionarticlebean.seDeconnecter()}">
-								<h:outputText value="Sign out"></h:outputText>
-							</h:commandLink></li>
-					</ul>
+					<div>
+						<input id="menu-toggle" type="checkbox" /> <label
+							class="menu-button-container" for="menu-toggle">
+							<div class="menu-button"></div>
+						</label>
+						<ul class="menu">
+							<li><h:commandLink action="/home.xhtml">
+									<h:outputText value="Home"></h:outputText>
+								</h:commandLink></li>
+							<li><h:commandLink
+									action="#{gestionarticlebean.seDeconnecter()}">
+									<h:outputText value="Sign out"></h:outputText>
+								</h:commandLink></li>
+						</ul>
+					</div>
 				</div>
 			</h:form>
 		</f:view>

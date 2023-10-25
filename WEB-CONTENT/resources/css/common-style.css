@@ -113,9 +113,6 @@ ul {
 	list-style-type: none;
 }
 
-/*  .menu>li>a{
-	color: var(--white);
-} */
 a {
 	outline: none;
 	text-decoration: none;
@@ -465,4 +462,14 @@ a:hover {
 		
 		
 	}
+	
+	/*----------------------------body---------------------------- */
+	.text-center{
+	text-align: center
+	}
+	
+	#firstName{
+	text-align: center
+	}
+	
 }

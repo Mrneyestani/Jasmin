@@ -30,20 +30,23 @@
 						<div class="header-title">
 							<h1>Jasmin</h1>
 						</div>
-						<input id="menu-toggle" type="checkbox" /> <label
-							class="menu-button-container" for="menu-toggle">
-							<div class="menu-button"></div>
-						</label>
-						<ul class="menu">
-							<li class="user"><p>Hi
-									#{loginbean.connectedUser.firstName}</p></li>
-							<li><h:commandLink action="/gestion_articles">
-									<h:outputText value="Home"></h:outputText>
-								</h:commandLink></li>
-							<li><h:commandLink action="#{gestionarticlebean.seDeconnecter()}">
-									<h:outputText value="Sign out"></h:outputText>
-								</h:commandLink></li>
-						</ul>
+						<div style="padding: 1rem">
+							<input id="menu-toggle" type="checkbox" /> <label
+								class="menu-button-container" for="menu-toggle">
+								<div class="menu-button"></div>
+							</label>
+							<ul class="menu">
+								<li class="user"><p>Hi
+										#{loginbean.connectedUser.firstName}</p></li>
+								<li><h:commandLink action="/gestion_articles">
+										<h:outputText value="Home"></h:outputText>
+									</h:commandLink></li>
+								<li><h:commandLink
+										action="#{gestionarticlebean.seDeconnecter()}">
+										<h:outputText value="Sign out"></h:outputText>
+									</h:commandLink></li>
+							</ul>
+						</div>
 					</div>
 				</h:form>
 			</f:view>
@@ -52,13 +55,11 @@
 		<ui:define name="content">
 			<f:view>
 				<h:form>
-				<h3>Ajouter des articles à la catégorie sélectionnée ci-dessous 
-				ou créer une nouvelle catégorie.</h3>
+				<h3>Ajouter des articles ou créer des catégories</h3>
 					<h:commandButton id="addUser" value="Ajouter/créer"
 						action="#{gestionarticlebean.goToPageAddUpdateInitialised()}">
 					</h:commandButton>
-					<h3>Sélectionnez une catégorie pour afficher ou modifier ses
-						articles :</h3>
+					<h3>Sélectionnez une catégorie</h3>
 					<h:selectOneMenu value="#{gestionarticlebean.categorieId}"
 						onchange="submit()"
 						valueChangeListener="#{gestionarticlebean.categorieChange}">
@@ -69,8 +70,8 @@
 				</h:form>
 				<h:form>
 					<h4>Catégorie sélectionnée :</h4>
-					<h:dataTable id="datatable" border="1" cellpadding="2"
-						cellspacing="3" style="text-align:center"
+					<h:dataTable id="datatable" border="1" cellpadding="0"
+						cellspacing="0" style="text-align:center"
 						value="#{gestionarticlebean.categorieActuel}"
 						styleClass="order-table" headerClass="order-table-header"
 						rowClasses="order-table-odd-row,order-table-even-row">
@@ -112,7 +113,7 @@
 							<f:facet name="header">
 								<h:outputText value="Action" />
 							</f:facet>
-							<h:commandLink value="Modifier" style="color:black"
+							<h:commandLink value="Modifier" style="color:green"
 								action="#{gestionarticlebean.selectCategorieActuel()}">
 								<f:setPropertyActionListener
 									target="#{gestionarticlebean.categorieId}"
@@ -123,7 +124,7 @@
 							<f:facet name="header">
 								<h:outputText value="Action" />
 							</f:facet>
-							<h:commandLink value="Supprimer" style="color:black"
+							<h:commandLink value="Supprimer" style="color:red"
 								action="#{gestionarticlebean.deleteCategorie()}">
 							</h:commandLink>
 						</h:column>
@@ -131,8 +132,8 @@
 				</h:form>
 				<h:form>
 					<h4>List d'articles de catégorie sélectionné :</h4>
-					<h:dataTable id="datatable" border="1" cellpadding="2"
-						cellspacing="3" style="text-align:center"
+					<h:dataTable id="datatable" border="1" cellpadding="0"
+						cellspacing="0" style="text-align:center"
 						value="#{gestionarticlebean.categorieActuel.items}"
 						var="currentItem">
 						<h:column>
@@ -204,7 +205,7 @@
 							<f:facet name="header">
 								<h:outputText value="Action" />
 							</f:facet>
-							<h:commandLink value="Modifier" style="color:black"
+							<h:commandLink value="Modifier" style="color:green"
 								action="#{gestionarticlebean.goToPageAddUpdateArticleSelected()}">
 								<f:setPropertyActionListener
 									target="#{gestionarticlebean.articleActuel}"
@@ -215,7 +216,7 @@
 							<f:facet name="header">
 								<h:outputText value="Action" />
 							</f:facet>
-							<h:commandLink value="Supprimer" style="color:black"
+							<h:commandLink value="Supprimer" style="color:red"
 								action="#{gestionarticlebean.deleteArticleById()}">
 								<f:setPropertyActionListener
 									target="#{gestionarticlebean.articleActuel}"

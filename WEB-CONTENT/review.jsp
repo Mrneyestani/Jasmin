@@ -75,7 +75,7 @@
 			<td>${shippingAddress.city}</td>
 		</tr>
 		<tr>
-			<td>Paye:</td>
+			<td>Pays:</td>
 			<td>${shippingAddress.state}</td>
 		</tr>
 		<tr>
